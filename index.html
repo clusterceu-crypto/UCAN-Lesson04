@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Заняття 04 курсу UCAN: глобальні тренди та уроки кліматично розумного урбанізму.">
+  <meta name="theme-color" content="#123f68">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <title>Заняття 04 — Глобальні тренди та уроки кліматично розумного урбанізму</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#lesson-main">Перейти до основного змісту</a>
+
+  <header class="site-header" aria-label="Навігація заняття">
+    <div class="brand" aria-label="UCAN">UCAN</div>
+    <div class="header-center">
+      <span class="lesson-label">Заняття 04</span>
+      <span id="page-label" class="page-label" aria-live="polite"></span>
+    </div>
+    <button id="reset-all-top" class="button button-quiet button-small" type="button">Скинути прогрес</button>
+  </header>
+
+  <div class="progress-shell" aria-label="Прогрес відвіданих сторінок">
+    <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <span id="progress-fill" class="progress-fill"></span>
+    </div>
+    <span id="progress-text" class="progress-text"></span>
+  </div>
+
+  <div id="global-status" class="status-region" role="status" aria-live="polite"></div>
+
+  <main id="lesson-main" class="lesson-main" tabindex="-1">
+    <section class="lesson-page opening-page" data-page-role="opening" aria-labelledby="p01-title">
+      <div class="eyebrow">Заняття 04</div>
+      <h1 id="p01-title">Глобальні тренди та уроки кліматично розумного урбанізму</h1>
+      <p class="lead">Досвід EU Mission “Climate-Neutral and Smart Cities” та його адаптація для українських громад</p>
+      <p class="duration">Орієнтовна тривалість: 35–45 хвилин основного навчання; фінальний тест окремо.</p>
+
+      <div class="opening-grid">
+        <article class="info-card accent-card">
+          <h2>Мета заняття</h2>
+          <p>Сформувати управлінський спосіб перенесення досвіду: від підтвердженого прикладу — до умов застосування у власній громаді.</p>
+        </article>
+        <article class="info-card">
+          <h2>Навіщо Вам це заняття</h2>
+          <p>Європейські міста вже випробовують нові моделі управління кліматичним переходом. Для української громади їхній досвід може скоротити шлях від загальної амбіції до конкретного рішення. Але механічне копіювання створює ризик: інше законодавство, інша інфраструктура, інший бюджет і воєнний контекст можуть зробити навіть успішний приклад непридатним.</p>
+          <p>Після цього заняття Ви зможете відділяти підтверджений факт від привабливої історії, бачити управлінську логіку Climate City Contract і обирати той елемент міжнародного досвіду, який реально можна перевірити у Вашій громаді.</p>
+        </article>
+      </div>
+
+      <section class="content-section" aria-labelledby="outcomes-title">
+        <h2 id="outcomes-title">Чому Ви навчитесь</h2>
+        <ul class="check-list">
+          <li>Пояснити, для чого створена EU Mission “Climate-Neutral and Smart Cities” та яку роль у ній відіграє Climate City Contract.</li>
+          <li>Відрізнити системний міський підхід від окремого технологічного проєкту.</li>
+          <li>Проаналізувати міжнародний кейс через проблему, управлінську модель, партнерства, фінансування та умови перенесення.</li>
+          <li>Визначити, що з досвіду іншого міста можна адаптувати, а що потребує додаткової перевірки.</li>
+          <li>Сформувати один реалістичний крок для своєї громади та підготувати контекст для Lesson 05.</li>
+        </ul>
+      </section>
+
+      <article class="result-card">
+        <h2>Практичний результат</h2>
+        <p class="result-title">Карта адаптації міжнародного кліматичного досвіду для громади.</p>
+        <p>Це не план повного впровадження. Це коротка управлінська карта, яка допомагає обрати один елемент перевіреного міжнародного досвіду, оцінити умови його перенесення та сформулювати перший безпечний крок у власній громаді.</p>
+      </article>
+
+      <figure class="visual-frame hero-visual">
+        <img src="assets/L04-A01_International_to_Local_First_Step_v1.0.png" alt="Триетапна схема: що підтверджує джерело, що потрібно перевірити у громаді, перший крок." width="1200" height="1500">
+      </figure>
+
+      <section class="content-section" aria-labelledby="map-title">
+        <h2 id="map-title">Карта заняття</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>№</th><th>Блок</th><th>Активність</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Орієнтація</td><td>Мета, результати й практичний результат</td></tr>
+              <tr><td>2</td><td>Теоретичний блок</td><td>EU Cities Mission і Climate City Contract</td></tr>
+              <tr><td>3</td><td>Теоретичний блок</td><td>Системний міський підхід</td></tr>
+              <tr><td>4</td><td>Практична логіка</td><td>Як читати міжнародний кейс</td></tr>
+              <tr><td>5</td><td>Корисний міжнародний досвід</td><td>Копенгаген, Барселона, EU Cities Mission</td></tr>
+              <tr><td>6</td><td>Орієнтири для поглиблення</td><td>Офіційні джерела</td></tr>
+              <tr><td>7</td><td>Самоперевірка</td><td>Копіювати чи адаптувати?</td></tr>
+              <tr><td>8</td><td>Практичне завдання</td><td>Карта адаптації</td></tr>
+              <tr><td>9</td><td>AI-підтримка</td><td>Перевірка структури аналізу й контекст для наступного заняття</td></tr>
+              <tr><td>10</td><td>Підсумковий тест заняття</td><td>Шість питань</td></tr>
+              <tr><td>11</td><td>Завершення</td><td>Рефлексія та наступний крок</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <section class="lesson-page" data-page-role="theory" aria-labelledby="p02-title" hidden>
+      <div class="eyebrow">Теоретичний блок</div>
+      <h1 id="p02-title">Що змінює EU Cities Mission</h1>
+      <p>EU Mission “Climate-Neutral and Smart Cities” створена, щоб підтримати міста ЄС та асоційованих країн у переході до кліматичної нейтральності до 2030 року та зробити їх майданчиками для випробування рішень, які можуть використовувати інші міста до 2050 року.</p>
+      <p>Для міського голови важлива не сама належність до Mission, а її управлінська логіка: кліматична нейтральність розглядається як загальноміська трансформація, що об’єднує владу, мешканців, бізнес, інвесторів, регіональний і національний рівні.</p>
+
+      <figure class="visual-frame">
+        <img src="assets/L04-A02_EU_Cities_Mission_System_v1.0.png" alt="Системна схема з п’яти взаємопов’язаних елементів EU Cities Mission." width="1200" height="1500">
+      </figure>
+
+      <aside class="callout callout-blue">
+        <h2>Що це означає для міського голови?</h2>
+        <p>Кліматична дія не повинна залишатися проєктом одного департаменту. Вона потребує спільної політичної відповідальності, міжсекторальної координації та зрозумілої інвестиційної логіки.</p>
+      </aside>
+
+      <section class="content-section" aria-labelledby="ccc-title">
+        <h2 id="ccc-title">Climate City Contract як управлінський інструмент</h2>
+        <p>Climate City Contract — це не юридичний договір у звичайному значенні. Це спільно сформована міська рамка, яка поєднує зобов’язання, план дій та інвестиційний план. Її готують із залученням місцевих стейкголдерів і мешканців.</p>
+        <ul>
+          <li>спільне бачення кліматичної нейтральності;</li>
+          <li>узгоджені пріоритети та відповідальні сторони;</li>
+          <li>план конкретних дій у ключових секторах;</li>
+          <li>інвестиційна логіка та потреби у фінансуванні;</li>
+          <li>механізм навчання, коригування і взаємодії.</li>
+        </ul>
+      </section>
+
+      <aside class="callout callout-neutral">
+        <h2>Типова помилка громад</h2>
+        <p>Починати з переліку проєктів або грантових можливостей, не сформувавши спільної міської логіки та критеріїв вибору дій.</p>
+      </aside>
+    </section>
+
+    <section class="lesson-page" data-page-role="theory" aria-labelledby="p03-title" hidden>
+      <div class="eyebrow">Теоретичний блок</div>
+      <h1 id="p03-title">Що таке кліматично розумний урбанізм</h1>
+      <p>Кліматично розумний урбанізм поєднує скорочення викидів, адаптацію, якість життя, соціальну справедливість, дані та довгострокову вартість рішень. Він не зводиться до цифрових платформ або “зелених” об’єктів.</p>
+
+      <div class="table-wrap comparison-table">
+        <table>
+          <thead>
+            <tr><th>Ознака</th><th>Слабкий підхід</th><th>Системний підхід</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Масштаб</th><td>Окремий проєкт</td><td>Портфель взаємопов’язаних дій</td></tr>
+            <tr><th scope="row">Управління</th><td>Один департамент</td><td>Спільна відповідальність і координація</td></tr>
+            <tr><th scope="row">Дані</th><td>Звітність після завершення</td><td>Дані для вибору, моніторингу й коригування</td></tr>
+            <tr><th scope="row">Фінансування</th><td>Пошук одного гранту</td><td>Інвестиційний план і різні джерела</td></tr>
+            <tr><th scope="row">Мешканці</th><td>Інформування після рішення</td><td>Співучасть у формуванні та реалізації</td></tr>
+            <tr><th scope="row">Перенесення досвіду</th><td>Копіювання рішення</td><td>Адаптація принципу до місцевих умов</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <aside class="callout callout-green">
+        <h2>Головна думка заняття</h2>
+        <p>Міжнародний досвід корисний не тоді, коли громада копіює чуже рішення, а тоді, коли розуміє його логіку, умови успіху та адаптує перший крок до власного контексту.</p>
+      </aside>
+    </section>
+
+    <section class="lesson-page" data-page-role="application" aria-labelledby="p04-title" hidden>
+      <div class="eyebrow">Практична логіка</div>
+      <h1 id="p04-title">Як читати міжнародний кейс</h1>
+      <ol class="steps-list">
+        <li>Визначте проблему, яку місто намагалося вирішити.</li>
+        <li>Знайдіть підтверджену дію або управлінську модель.</li>
+        <li>З’ясуйте, хто був залучений і як розподілялася відповідальність.</li>
+        <li>Перевірте, які умови підтримували рішення: дані, законодавство, фінансування, інфраструктура, довіра.</li>
+        <li>Відокремте факт від інтерпретації.</li>
+        <li>Сформулюйте, який принцип можна перенести, а не який об’єкт потрібно скопіювати.</li>
+        <li>Визначте малий перший крок і критерій перевірки.</li>
+      </ol>
+
+      <figure class="visual-frame">
+        <img src="assets/L04-A03_Copy_or_Adapt_v1.0.png" alt="Порівняння двох підходів: копіювання рішення та адаптація принципу до місцевих умов." width="1200" height="1500">
+      </figure>
+
+      <section class="content-section" aria-labelledby="recovery-title">
+        <h2 id="recovery-title">Уроки для українського відновлення</h2>
+        <p>Для українських громад міжнародний досвід має проходити через додатковий фільтр: воєнні ризики, пошкоджена інфраструктура, обмежені бюджети, кадровий дефіцит і потреба швидкого відновлення. Саме тому корисним є не “найефектніше” рішення, а те, що підсилює стійкість, знижує довгострокові витрати і може бути поетапно впроваджене.</p>
+        <aside class="callout callout-blue">
+          <h3>Управлінський фільтр</h3>
+          <p>Чи допомагає обраний принцип одночасно відновлювати, зменшувати майбутні ризики, покращувати якість послуг і відкривати доступ до партнерств та інвестицій?</p>
+        </aside>
+      </section>
+
+      <section class="two-column-section">
+        <article>
+          <h2>Що це означає для міського голови?</h2>
+          <ul>
+            <li>Сформувати політичний мандат для міжсекторальної кліматичної роботи.</li>
+            <li>Вимагати від команди пояснення не лише “що зробити”, а й “чому це працюватиме саме тут”.</li>
+            <li>Підтримувати партнерства з іншими містами як інструмент навчання, а не як церемоніальну співпрацю.</li>
+            <li>Пов’язувати відновлення, кліматичні цілі, інвестиції та якість життя в одній управлінській рамці.</li>
+          </ul>
+        </article>
+        <article>
+          <h2>Що це означає для громади?</h2>
+          <p>Мешканці, бізнес, університети, комунальні підприємства та громадські організації повинні бути не лише аудиторією кліматичної політики. Вони можуть надавати дані, допомагати визначати пріоритети, тестувати рішення та брати участь у реалізації.</p>
+        </article>
+      </section>
+    </section>
+
+    <section class="lesson-page" data-page-role="transition" aria-labelledby="p05-title" hidden>
+      <div class="eyebrow">Перед тим як перейти до практики</div>
+      <h1 id="p05-title">Корисний міжнародний досвід</h1>
+
+      <section class="content-section" aria-labelledby="ukraine-title">
+        <h2 id="ukraine-title">Як це працює для українських громад</h2>
+        <p>SUN4Ukraine підтримує українські міста у поєднанні кліматичної нейтральності з відновленням. Програма передбачає експертну підтримку, розвиток спроможності та партнерства з Mission Cities. Для Lesson 04 головний урок полягає не у формальному приєднанні до ініціативи, а в тому, що українські громади можуть використовувати Climate City Contract-подібну логіку для узгодження відновлення, кліматичних цілей, партнерств і інвестицій.</p>
+      </section>
+
+      <div class="case-grid" aria-label="Три міжнародні кейси">
+        <article class="case-card">
+          <h2>Копенгаген</h2>
+          <dl>
+            <div><dt>Що підтверджує офіційне джерело</dt><dd>Місто прийняло Climate Strategy 2035 та Action Plan 2026–2028; план охоплює енергосистему, транспорт, будівлі та інші напрями.</dd></div>
+            <div><dt>Можливе застосування</dt><dd>Використовувати довгострокову стратегію разом із коротшими планами дій і відповідальністю за виконання.</dd></div>
+            <div class="evidence-boundary"><dt>Межа доказу</dt><dd>Не стверджувати, що конкретні рішення автоматично придатні для українських міст або що попередня ціль 2025 була повністю досягнута.</dd></div>
+          </dl>
+        </article>
+
+        <article class="case-card">
+          <h2>Барселона</h2>
+          <dl>
+            <div><dt>Що підтверджує офіційне джерело</dt><dd>Climate Plan 2024 поєднує скорочення викидів і адаптацію та організований у шість програм, включно з теплом, стійкістю, мобільністю, енергопереходом і районами.</dd></div>
+            <div><dt>Можливе застосування</dt><dd>Поєднувати кліматичну політику з територіальним виміром, справедливістю та повсякденними міськими сервісами.</dd></div>
+            <div class="evidence-boundary"><dt>Межа доказу</dt><dd>Не переносити бюджет, масштаби чи інструменти без аналізу місцевого законодавства та ресурсів.</dd></div>
+          </dl>
+        </article>
+
+        <article class="case-card">
+          <h2>EU Cities Mission</h2>
+          <dl>
+            <div><dt>Що підтверджує офіційне джерело</dt><dd>Mission використовує Climate City Contracts, співтворення, міжсекторальні рішення та інвестиційні плани.</dd></div>
+            <div><dt>Можливе застосування</dt><dd>Взяти структуру мислення: зобов’язання → дії → інвестиції → навчання та коригування.</dd></div>
+            <div class="evidence-boundary"><dt>Межа доказу</dt><dd>Mission Label і участь у програмі не є передумовою для використання окремих принципів.</dd></div>
+          </dl>
+        </article>
+      </div>
+
+      <section class="micro-task" aria-labelledby="micro-task-title">
+        <h2 id="micro-task-title">Маленьке завдання</h2>
+        <label for="transition-note">Запишіть одним реченням: який міжнародний принцип Ви хотіли б перевірити у своїй громаді — і яку місцеву умову потрібно перевірити першою?</label>
+        <textarea id="transition-note" rows="4"></textarea>
+        <p id="transition-note-status" class="field-status" role="status" aria-live="polite"></p>
+      </section>
+    </section>
+
+    <section class="lesson-page" data-page-role="resources" aria-labelledby="p06-title" hidden>
+      <div class="eyebrow">Ключові ресурси. Де шукати натхнення</div>
+      <h1 id="p06-title">Орієнтири для поглиблення</h1>
+      <div class="resource-grid">
+        <article class="resource-card">
+          <h2>EU Mission: Climate-Neutral and Smart Cities</h2>
+          <dl>
+            <div><dt>Офіційна організація</dt><dd>European Commission</dd></div>
+            <div><dt>Для чого використовувати</dt><dd>Зрозуміти мету Mission, її загальноміську управлінську логіку та роль Climate City Contracts.</dd></div>
+            <div class="evidence-boundary"><dt>Межа доказу</dt><dd>Не використовувати поточні числові статуси Mission як learner-facing claim або доказ придатності для громади.</dd></div>
+            <div><dt>Посилання</dt><dd><a href="https://research-and-innovation.ec.europa.eu/funding/funding-opportunities/funding-programmes-and-open-calls/horizon-europe/eu-missions-horizon-europe/climate-neutral-and-smart-cities_en" target="_blank" rel="noopener noreferrer">Відкрити офіційне джерело</a></dd></div>
+          </dl>
+        </article>
+
+        <article class="resource-card">
+          <h2>Climate City Contracts / Mission Platform</h2>
+          <dl>
+            <div><dt>Офіційна організація</dt><dd>NetZeroCities / EU Cities Mission</dd></div>
+            <div><dt>Для чого використовувати</dt><dd>Поглибити розуміння Climate City Contract як рамки зобов’язань, дій та інвестицій.</dd></div>
+            <div class="evidence-boundary"><dt>Межа доказу</dt><dd>Не трактувати Climate City Contract як звичайний юридичний договір або універсальний шаблон без адаптації.</dd></div>
+            <div><dt>Посилання</dt><dd><a href="https://netzerocities.eu/" target="_blank" rel="noopener noreferrer">Відкрити офіційне джерело</a></dd></div>
+          </dl>
+        </article>
+
+        <article class="resource-card">
+          <h2>SUN4Ukraine</h2>
+          <dl>
+            <div><dt>Офіційна організація</dt><dd>European Commission</dd></div>
+            <div><dt>Для чого використовувати</dt><dd>Побачити, як українські міста можуть поєднувати кліматичну нейтральність із відновленням, спроможністю та партнерствами.</dd></div>
+            <div class="evidence-boundary"><dt>Межа доказу</dt><dd>Не подавати участь як гарантію фінансування, готовності або автоматичної придатності конкретного рішення.</dd></div>
+            <div><dt>Посилання</dt><dd><a href="https://research-and-innovation.ec.europa.eu/news/all-research-and-innovation-news/twelve-ukrainian-cities-join-sun4ukraine-initiative-eu-climate-neutral-and-smart-cities-mission-2024-12-03_en" target="_blank" rel="noopener noreferrer">Відкрити офіційне джерело</a></dd></div>
+          </dl>
+        </article>
+
+        <article class="resource-card">
+          <h2>Climate Strategy and Action Plan</h2>
+          <dl>
+            <div><dt>Офіційна організація</dt><dd>City of Copenhagen</dd></div>
+            <div><dt>Для чого використовувати</dt><dd>Розглянути зв’язок довгострокової стратегії, коротших планів дій і відповідальності за виконання.</dd></div>
+            <div class="evidence-boundary"><dt>Межа доказу</dt><dd>Не стверджувати, що попередня ціль 2025 була повністю досягнута або що конкретні рішення автоматично переносяться.</dd></div>
+            <div><dt>Посилання</dt><dd><a href="https://www.kk.dk/politik/politikker-og-indsatser/klima-miljoe-og-natur/klimastrategi-og-klimahandleplan" target="_blank" rel="noopener noreferrer">Відкрити офіційне джерело</a></dd></div>
+          </dl>
+        </article>
+
+        <article class="resource-card">
+          <h2>Climate Plan 2024</h2>
+          <dl>
+            <div><dt>Офіційна організація</dt><dd>Barcelona City Council</dd></div>
+            <div><dt>Для чого використовувати</dt><dd>Розглянути інтеграцію скорочення викидів, адаптації, районного виміру, справедливості та міських сервісів.</dd></div>
+            <div class="evidence-boundary"><dt>Межа доказу</dt><dd>Не переносити бюджет, масштаби чи інструменти без аналізу місцевого законодавства та ресурсів.</dd></div>
+            <div><dt>Посилання</dt><dd><a href="https://ajuntament.barcelona.cat/ecologiaurbana/en/noticia/new-climate-plan-to-strengthen-the-response-to-the-climate-crisis_1459561" target="_blank" rel="noopener noreferrer">Відкрити офіційне джерело</a></dd></div>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <section class="lesson-page" data-page-role="self-check" aria-labelledby="p07-title" hidden>
+      <div class="eyebrow">Самоперевірка</div>
+      <h1 id="p07-title">Копіювати чи адаптувати?</h1>
+      <p>Визначте, чи демонструє кожне твердження безпечну адаптацію міжнародного досвіду. Самоперевірка не оцінюється і не блокує перехід до практики.</p>
+
+      <form id="self-check-form" novalidate>
+        <div id="self-check-items" class="question-list"></div>
+        <div class="button-row">
+          <button class="button button-primary" type="submit">Відповісти</button>
+          <button id="self-check-reset" class="button button-secondary" type="button">Очистити самоперевірку</button>
+        </div>
+        <p id="self-check-status" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="lesson-page" data-page-role="practice" aria-labelledby="p08-title" hidden>
+      <div class="eyebrow">Практичне завдання</div>
+      <h1 id="p08-title">Карта адаптації міжнародного кліматичного досвіду для громади</h1>
+      <p>Оберіть один міжнародний кейс або принцип, який стосується кліматичної дії Вашої громади. Заповніть Карту адаптації. Ваше завдання — не довести, що рішення вже підходить, а сформулювати, що саме потрібно перевірити перед першим кроком.</p>
+
+      <aside class="callout callout-neutral">
+        <p>Завдання не є повним планом впровадження, інвестиційною пропозицією, техніко-економічним обґрунтуванням, закупівельною специфікацією, грантовою заявкою або твердженням, що обране рішення вже придатне.</p>
+      </aside>
+
+      <form id="portfolio-form" class="portfolio-form" novalidate>
+        <div class="form-group-heading">Контекст і доказ</div>
+
+        <div class="field-group">
+          <label for="community">Ваша громада <span class="required-mark">обов’язково</span></label>
+          <p id="community-hint" class="field-hint">Назва громади; без персональних даних.</p>
+          <input id="community" name="community" type="text" required aria-describedby="community-hint community-error">
+          <p id="community-error" class="field-error"></p>
+        </div>
+
+        <div class="field-group">
+          <label for="local_challenge">Локальний виклик <span class="required-mark">обов’язково</span></label>
+          <p id="local_challenge-hint" class="field-hint">Одна конкретна проблема або кліматична дія.</p>
+          <textarea id="local_challenge" name="local_challenge" rows="4" required aria-describedby="local_challenge-hint local_challenge-error"></textarea>
+          <p id="local_challenge-error" class="field-error"></p>
+        </div>
+
+        <div class="field-group">
+          <label for="prior_context">Контекст із Lesson 03 <span class="optional-mark">необов’язково</span></label>
+          <p id="prior_context-hint" class="field-hint">Кліматична дія або управлінське питання.</p>
+          <textarea id="prior_context" name="prior_context" rows="3" aria-describedby="prior_context-hint"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label for="case_title">Міжнародний кейс або принцип <span class="required-mark">обов’язково</span></label>
+          <p id="case_title-hint" class="field-hint">Коротка learner-facing назва.</p>
+          <input id="case_title" name="case_title" type="text" required aria-describedby="case_title-hint case_title-error">
+          <p id="case_title-error" class="field-error"></p>
+        </div>
+
+        <div class="field-group">
+          <label for="official_source">Офіційне джерело <span class="required-mark">обов’язково</span></label>
+          <p id="official_source-hint" class="field-hint">URL або назва офіційної організації.</p>
+          <input id="official_source" name="official_source" type="text" required aria-describedby="official_source-hint official_source-error">
+          <p id="official_source-error" class="field-error"></p>
+        </div>
+
+        <div class="field-group">
+          <label for="confirmed_evidence">Що підтверджує джерело <span class="required-mark">обов’язково</span></label>
+          <p id="confirmed_evidence-hint" class="field-hint">Лише перевірений факт або дія.</p>
+          <textarea id="confirmed_evidence" name="confirmed_evidence" rows="5" required aria-describedby="confirmed_evidence-hint confirmed_evidence-error"></textarea>
+          <p id="confirmed_evidence-error" class="field-error"></p>
+        </div>
+
+        <div class="form-group-heading">Адаптація</div>
+
+        <div class="field-group">
+          <label for="transferable_principle">Який принцип можна перенести <span class="required-mark">обов’язково</span></label>
+          <p id="transferable_principle-hint" class="field-hint">Не копія об’єкта, а управлінська логіка.</p>
+          <textarea id="transferable_principle" name="transferable_principle" rows="4" required aria-describedby="transferable_principle-hint transferable_principle-error"></textarea>
+          <p id="transferable_principle-error" class="field-error"></p>
+        </div>
+
+        <div class="field-group">
+          <label for="adaptation_conditions">Що потрібно перевірити у громаді <span class="required-mark">обов’язково</span></label>
+          <p id="adaptation_conditions-hint" class="field-hint">Законодавство, бюджет, дані, команда, інфраструктура, довіра.</p>
+          <textarea id="adaptation_conditions" name="adaptation_conditions" rows="5" required aria-describedby="adaptation_conditions-hint adaptation_conditions-error"></textarea>
+          <p id="adaptation_conditions-error" class="field-error"></p>
+        </div>
+
+        <div class="form-group-heading">Перший крок</div>
+
+        <div class="field-group">
+          <label for="first_step">Перший крок <span class="required-mark">обов’язково</span></label>
+          <p id="first_step-hint" class="field-hint">Малий і реалістичний крок.</p>
+          <textarea id="first_step" name="first_step" rows="4" required aria-describedby="first_step-hint first_step-error"></textarea>
+          <p id="first_step-error" class="field-error"></p>
+        </div>
+
+        <div class="field-group">
+          <label for="risk">Головний ризик <span class="required-mark">обов’язково</span></label>
+          <p id="risk-hint" class="field-hint">Один ризик, який може зупинити або спотворити адаптацію.</p>
+          <textarea id="risk" name="risk" rows="3" required aria-describedby="risk-hint risk-error"></textarea>
+          <p id="risk-error" class="field-error"></p>
+        </div>
+
+        <div class="field-group">
+          <label for="partner">Кого потрібно залучити <span class="required-mark">обов’язково</span></label>
+          <p id="partner-hint" class="field-hint">Підрозділ, КП, бізнес, університет, ГО або інший партнер.</p>
+          <textarea id="partner" name="partner" rows="3" required aria-describedby="partner-hint partner-error"></textarea>
+          <p id="partner-error" class="field-error"></p>
+        </div>
+
+        <div class="field-group">
+          <label for="success_signals">2–3 ознаки доцільності <span class="required-mark">обов’язково</span></label>
+          <p id="success_signals-hint" class="field-hint">Короткі ознаки для перевірки пілота.</p>
+          <textarea id="success_signals" name="success_signals" rows="4" required aria-describedby="success_signals-hint success_signals-error"></textarea>
+          <p id="success_signals-error" class="field-error"></p>
+        </div>
+
+        <div class="field-group">
+          <label for="next_lesson_note">Що перевірити в Lesson 05 <span class="required-mark">обов’язково</span></label>
+          <p id="next_lesson_note-hint" class="field-hint">Чи може NBS бути частиною рішення.</p>
+          <textarea id="next_lesson_note" name="next_lesson_note" rows="4" required aria-describedby="next_lesson_note-hint next_lesson_note-error"></textarea>
+          <p id="next_lesson_note-error" class="field-error"></p>
+        </div>
+
+        <div class="button-row">
+          <button class="button button-primary" type="submit">Відповісти</button>
+          <button id="print-portfolio" class="button button-secondary" type="button">Друк / зберегти PDF</button>
+          <button id="clear-portfolio" class="button button-danger" type="button">Очистити практичне завдання</button>
+        </div>
+        <p id="portfolio-status" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <section id="portfolio-summary" class="portfolio-summary" aria-labelledby="portfolio-summary-title" hidden>
+        <h2 id="portfolio-summary-title">Карта адаптації міжнародного кліматичного досвіду для громади</h2>
+        <p id="portfolio-completion-note" class="summary-note"></p>
+        <dl id="portfolio-summary-list"></dl>
+        <p class="ai-note">Цей PDF можна за Вашим рішенням передати AI-помічнику для аналізу, уточнення або вдосконалення запропонованого рішення. Не додавайте персональні чи конфіденційні дані.</p>
+      </section>
+    </section>
+
+    <section class="lesson-page" data-page-role="support" aria-labelledby="p09-title" hidden>
+      <div class="eyebrow">Підтримка аналізу</div>
+      <h1 id="p09-title">AI-підтримка та контекст для наступного заняття</h1>
+      <p>AI-підтримка допомагає структурувати аналіз. Вона не обирає кейс, не оцінює придатність рішення і не заповнює Карту адаптації.</p>
+
+      <form id="ai-support-form" class="ai-support" novalidate>
+        <fieldset>
+          <legend>Оберіть один режим</legend>
+          <label class="choice-card"><input type="radio" name="ai-mode" value="fact-check" checked> <span>Перевірити, чи відокремлено підтверджений факт від інтерпретації</span></label>
+          <label class="choice-card"><input type="radio" name="ai-mode" value="questions"> <span>Сформувати уточнювальні питання про умови адаптації</span></label>
+          <label class="choice-card"><input type="radio" name="ai-mode" value="compress"> <span>Стиснути погоджений контекст для Lesson 05</span></label>
+        </fieldset>
+        <div class="button-row">
+          <button class="button button-primary" type="submit">Підготувати запит</button>
+          <button id="copy-ai-prompt" class="button button-secondary" type="button">Скопіювати запит</button>
+        </div>
+      </form>
+
+      <section class="prompt-panel" aria-labelledby="prompt-title">
+        <h2 id="prompt-title">Попередній перегляд запиту</h2>
+        <pre id="ai-prompt-preview" tabindex="0">Заповніть Карту адаптації та оберіть режим підтримки.</pre>
+        <p id="ai-status" class="form-status" role="status" aria-live="polite"></p>
+        <p class="privacy-note">Дані не передаються автоматично. Ви самі вирішуєте, що копіювати до зовнішнього AI-інструмента. Повна історія запитів не зберігається.</p>
+      </section>
+
+      <section class="context-transfer" aria-labelledby="context-title">
+        <h2 id="context-title">Скопіювати контекст для наступного заняття</h2>
+        <p>До контексту входять: Громада; виклик; принцип; умови; перший крок; питання про можливість NBS.</p>
+        <pre id="next-context-preview" tabindex="0">Заповніть відповідні поля Карти адаптації.</pre>
+        <button id="copy-next-context" class="button button-primary" type="button">Скопіювати контекст для наступного заняття</button>
+        <p id="context-status" class="form-status" role="status" aria-live="polite"></p>
+      </section>
+    </section>
+
+    <section class="lesson-page" data-page-role="assessment" aria-labelledby="p10-title" hidden>
+      <div class="eyebrow">Підсумковий тест заняття</div>
+      <h1 id="p10-title">Перевірте управлінську логіку</h1>
+      <p>Оберіть одну правильну відповідь у кожному питанні. Неправильні варіанти можуть звучати правдоподібно, тому звертайте увагу не лише на терміни, а й на управлінську логіку.</p>
+
+      <form id="assessment-form" novalidate>
+        <div id="assessment-items" class="question-list"></div>
+        <div class="button-row">
+          <button class="button button-primary" type="submit">Відповісти</button>
+          <button id="assessment-reset" class="button button-secondary" type="button">Очистити відповіді</button>
+        </div>
+        <p id="assessment-status" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="lesson-page completion-page" data-page-role="completion" aria-labelledby="p11-title" hidden>
+      <div class="eyebrow">Завершення</div>
+      <h1 id="p11-title">Головна думка заняття</h1>
+      <blockquote>Міжнародний досвід корисний не тоді, коли громада копіює чуже рішення, а тоді, коли розуміє його логіку, умови успіху та адаптує перший крок до власного контексту.</blockquote>
+
+      <section class="content-section" aria-labelledby="reflection-title">
+        <h2 id="reflection-title">Рефлексія</h2>
+        <ul>
+          <li>Який міжнародний приклад найбільше змінив Ваше уявлення про кліматичну дію?</li>
+          <li>Яку умову у Вашій громаді Ви найчастіше недооцінюєте під час перенесення чужого досвіду?</li>
+          <li>Що Ви готові перевірити разом із командою протягом наступних двох тижнів?</li>
+        </ul>
+      </section>
+
+      <section class="content-section" aria-labelledby="now-title">
+        <h2 id="now-title">Що варто зробити вже зараз</h2>
+        <p>Оберіть один підтверджений принцип із заняття та домовтеся з відповідальним підрозділом про коротку перевірку трьох речей: локальна проблема, необхідні умови та можливий перший пілот.</p>
+      </section>
+
+      <aside class="callout callout-green">
+        <h2>Дякуємо за виконання завдань заняття</h2>
+        <p>Вашу Карту адаптації збережено локально у цьому браузері.</p>
+      </aside>
+
+      <section class="content-section" aria-labelledby="next-title">
+        <h2 id="next-title">Перехід до наступного заняття</h2>
+        <p>У Занятті 05 Ви перейдете до природоорієнтованих рішень. Використайте свою Карту адаптації, щоб перевірити: чи може природа бути частиною відповіді на обраний локальний виклик — і які екосистемні, соціальні та управлінські умови для цього потрібні.</p>
+      </section>
+    </section>
+  </main>
+
+  <nav class="lesson-nav" aria-label="Переходи між сторінками">
+    <button id="prev-page" class="button button-secondary" type="button">Назад</button>
+    <span id="nav-page-count" class="nav-page-count" aria-live="polite"></span>
+    <button id="next-page" class="button button-primary" type="button">Далі</button>
+  </nav>
+
+  <footer class="site-footer">
+    <span>UCAN · Заняття 04</span>
+    <button id="reset-all-bottom" class="text-button" type="button">Скинути весь локальний прогрес</button>
+  </footer>
+</body>
+</html>
