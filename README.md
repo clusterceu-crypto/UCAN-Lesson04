@@ -1,17 +1,17 @@
-# UCAN Заняття 04 — HTML Release Candidate v1.0
+# UCAN Заняття 04 — HTML Release Candidate v1.1
 
 ## Статус
 
 - HTML package: completed
 - HTML QA: passed locally
-- Handoff: ready for Final Functional QA
+- Handoff: ready for Targeted Final QA
 - Package type: standalone static HTML/LMS release candidate
 
 ## Canonical sources
 
-- `UCAN_Заняття_04_Фінальна_Редакція_Pilot_v0.3.docx` — Drive ID `1dyJLMgSsC-Jh92DAPBu5tfEKxB52GPJ3`
-- `UCAN_Заняття_04_Дизайнерський_Пакет_v1.0.docx` — Drive ID `1gT77Ycead8VP0YqZ7aRUmrJ1uTNVtLNT`
-- `UCAN_Заняття_04_AI_Visual_Generation_Pack_v1.0.docx` — Drive ID `1IvhZ9Qs6ZFScvwXIg6aNYduWB9iAybK0`
+- `UCAN_Заняття_04_Фінальна_Редакція_v1.0.docx` — controlling canonical source
+- `UCAN_Заняття_04_Designer_Package_v1.1.docx` — synchronized downstream contract
+- `UCAN_Заняття_04_AI_Visual_Generation_Pack_v1.1.docx` — synchronized generated-asset contract; no visual regeneration required
 - Approved visual assets L04-A01–L04-A03 from the Lesson 04 Designer folder
 - Current standards confirmed through the UCAN Active Standards Registry: HTML/LMS v1.1, Lesson Creator v1.2, Editorial Style Guide v0.2.1, Brandbook v1.1
 
@@ -20,7 +20,7 @@ No legacy HTML or previous Lesson was used as a content source.
 ## Package structure
 
 ```text
-UCAN_Заняття_04_HTML_RC_v1.0/
+UCAN_Заняття_04_HTML_RC_v1.1/
 ├── index.html
 ├── css/
 │   └── style.css
@@ -47,7 +47,7 @@ Then open `http://localhost:8080/`.
 
 ## Functional scope
 
-- 11 semantic learner-facing pages with dynamic page count
+- 11 semantic participant-facing pages with dynamic page count
 - visited-page progress without false completion
 - keyboard navigation and heading focus management
 - local restoration of page, transition note, self-check, Portfolio form and final test
@@ -56,7 +56,7 @@ Then open `http://localhost:8080/`.
 - H03 six-item self-check, unlimited attempts, no completion gate
 - H04 exact 13-field Portfolio form, local persistence, clear confirmation and print/PDF summary
 - three controlled AI-support modes with preview and learner-controlled copy only
-- H06 exact copy-context action for Lesson 05
+- H06 exact copy-context action for Заняття 05
 - H05 six-item assessment with exact options, keys and feedback; completion page unlocks only after all six are correct
 - full local reset with confirmation
 - print styles for the full lesson and the Portfolio artifact
@@ -86,4 +86,17 @@ All keys are namespaced with `ucan_l04_v1`:
 - assessment answer, retry, persistence and completion-gate checks
 - DOCX-to-HTML exact-text verification for locked titles, labels, statements, feedback, test stems/options and Portfolio fields
 
-Final Functional QA should repeat the full browser scenarios in the target LMS/hosting environment.
+Independent Targeted Final QA should verify the controlled terminology, Portfolio continuity and affected functional flows before Final Release packaging.
+
+## v1.1 Targeted Synchronization
+
+Canonical source: `UCAN_Заняття_04_Фінальна_Редакція_v1.0.docx`.
+
+Controlled changes only:
+- participant-visible `Lesson 03/04/05` harmonized to `Заняття 03/04/05`;
+- internal participant-visible terminology removed;
+- Mayor’s Portfolio identity added under the practical artifact title;
+- completion message synchronized for use in Заняття 05.
+
+No JavaScript behavior, field IDs, localStorage namespace, assessment logic, navigation, page count, CSS, visual assets or external URLs were changed.
+
