@@ -6,7 +6,7 @@
     currentLessonLabel: 'Заняття 04',
     storageNamespace: 'ucan_l04_v1',
     storageSchemaVersion: '1.1',
-    releaseVersion: '1.1.1',
+    releaseVersion: '1.1.2',
     portfolioTitle: 'Карта адаптації міжнародного кліматичного досвіду для громади',
     portfolioLabel: 'Портфель мера',
     portfolioFilenamePattern: 'UCAN_Карта_адаптації_міжнародного_кліматичного_досвіду_{community}.pdf',
@@ -739,32 +739,12 @@
       status.textContent = 'PDF створено та завантажено. Дані залишилися у Вашому браузері.';
     } catch (error) {
       console.error('Portfolio PDF generation failed', error);
-      status.textContent = 'Не вдалося створити PDF. Скористайтеся вторинною дією «Друкувати через браузер».';
+      status.textContent = 'Не вдалося створити PDF. Перевірте налаштування браузера та спробуйте ще раз.';
     } finally {
       setLoading(button, false);
     }
   }
 
-  function printPortfolioFallback() {
-    const data = getPortfolioData();
-    savePortfolio();
-    renderPortfolioSummary(data);
-    const oldTitle = document.title;
-    document.title = `UCAN_Карта_адаптації_${sanitizeFilename(data.community)}`;
-    document.body.classList.add('print-portfolio');
-    const cleanup = () => {
-      document.body.classList.remove('print-portfolio');
-      document.title = oldTitle;
-      window.removeEventListener('afterprint', cleanup);
-    };
-    window.addEventListener('afterprint', cleanup);
-    try {
-      window.print();
-    } catch (error) {
-      cleanup();
-      document.getElementById('portfolio-status').textContent = 'Не вдалося відкрити друк. Використайте завантаження PDF.';
-    }
-  }
 
   function buildNextContext(data = getPortfolioData()) {
     return [
@@ -788,14 +768,14 @@
       .join('\n');
 
     const modeInstructions = {
-      'fact-check': 'Перевірте, чи чітко відокремлено те, що підтверджує джерело, від припущень про можливе застосування у громаді.',
-      questions: 'Сформуйте уточнювальні питання про умови адаптації, використовуючи лише наведений контекст.',
-      compress: 'Стисніть погоджений контекст для передачі до наступного заняття без додавання нових фактів.'
+      advice: 'Надайте коротку навчальну пораду: що в цій Карті адаптації варто уточнити насамперед, щоб краще застосувати логіку заняття. Не переписуйте роботу замість користувача.',
+      help: 'Допоможіть виконати завдання через навідні запитання. Послідовно поставте до п’яти запитань про доказ, переносний принцип, місцеві умови, ризик і перший крок. Не додавайте готових місцевих фактів.',
+      review: 'Перевірте готовий результат за критеріями заняття: відокремлення факту від припущення, реалістичність умов адаптації, конкретність першого кроку, ризик, партнер і ознаки доцільності. Вкажіть сильні сторони та точкові покращення.'
     };
 
     return [
       'Працюйте лише з контекстом, який надав користувач. Не вигадуйте джерела, місцеві факти, бюджети, строки, показники ефективності або гарантії придатності.',
-      modeInstructions[mode] || modeInstructions['fact-check'],
+      modeInstructions[mode] || modeInstructions.advice,
       '',
       'Контекст користувача:',
       context,
@@ -810,7 +790,7 @@
 
   function currentAiPrompt() {
     const selected = document.querySelector('input[name="ai-mode"]:checked');
-    return buildAiPrompt(selected?.value || 'fact-check', getPortfolioData());
+    return buildAiPrompt(selected?.value || 'advice', getPortfolioData());
   }
 
   function setPromptReady(ready) {
@@ -904,13 +884,6 @@
     announce('Навчальний прогрес очищено. Карта адаптації збережена.');
   }
 
-  function resetAllLocalData() {
-    const confirmed = window.confirm('Очистити всі локальні дані цього заняття, включно з Картою адаптації, нотатками, самоперевіркою та підсумковим тестом? Цю дію не можна скасувати.');
-    if (!confirmed) return;
-    Object.values(keys).forEach(storageRemove);
-    try { sessionStorage.setItem(`${STORAGE_PREFIX}:notice`, 'Усі локальні дані заняття очищено.'); } catch (error) { /* optional status handoff */ }
-    window.location.reload();
-  }
 
   function configureCompletionActions() {
     document.getElementById('return-start').addEventListener('click', () => showPage(0));
@@ -960,7 +933,6 @@
     document.getElementById('portfolio-form').addEventListener('submit', handlePortfolioSubmit);
     document.getElementById('clear-portfolio').addEventListener('click', clearPortfolio);
     document.getElementById('download-portfolio').addEventListener('click', downloadPortfolioPdf);
-    document.getElementById('print-portfolio').addEventListener('click', printPortfolioFallback);
     document.getElementById('ai-support-form').addEventListener('submit', handleAiPrompt);
 
     document.querySelectorAll('input[name="ai-mode"]').forEach(input => {
@@ -1015,7 +987,6 @@
       copyText(text, document.getElementById('context-status'), 'Контекст для наступного заняття скопійовано.');
     });
     document.getElementById('reset-progress-top').addEventListener('click', resetLearningProgress);
-    document.getElementById('reset-all-bottom').addEventListener('click', resetAllLocalData);
     configureExternalActions();
     configureCompletionActions();
 

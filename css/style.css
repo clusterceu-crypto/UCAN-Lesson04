@@ -553,3 +553,73 @@ textarea,
 
 /* Canonical hidden-state enforcement for styled controls and panels. */
 [hidden] { display: none !important; }
+
+
+/* UCAN learner-facing harmonization v1.1.2 */
+.lesson-page {
+  border-top: 6px solid var(--blue-800);
+}
+.lesson-page[data-page-role="opening"],
+.lesson-page[data-page-role="completion"] { border-top-color: var(--green-700); }
+.lesson-page[data-page-role="application"],
+.lesson-page[data-page-role="transition"],
+.lesson-page[data-page-role="practice"] { border-top-color: var(--teal-600); }
+.lesson-page[data-page-role="self-check"],
+.lesson-page[data-page-role="assessment"] { border-top-color: var(--green-700); }
+
+.eyebrow {
+  padding: 0.38rem 0.72rem;
+  background: var(--green-100);
+  border: 1px solid #c8dfd1;
+  border-radius: 999px;
+}
+.lesson-page[data-page-role="theory"] .eyebrow,
+.lesson-page[data-page-role="resources"] .eyebrow {
+  color: var(--blue-900);
+  background: var(--blue-100);
+  border-color: #c9dbe7;
+}
+.lesson-page[data-page-role="application"] .eyebrow,
+.lesson-page[data-page-role="transition"] .eyebrow,
+.lesson-page[data-page-role="practice"] .eyebrow,
+.lesson-page[data-page-role="support"] .eyebrow {
+  color: #0c6673;
+  background: var(--teal-100);
+  border-color: #b9e3e8;
+}
+
+.content-section > h2,
+.prompt-panel > h2,
+.context-transfer > h2,
+.micro-task > h2 {
+  padding: 0.65rem 0.85rem;
+  background: var(--blue-100);
+  border-left: 5px solid var(--blue-800);
+  border-radius: 0 10px 10px 0;
+}
+.micro-task > h2,
+.prompt-panel > h2,
+.context-transfer > h2 {
+  background: var(--teal-100);
+  border-left-color: var(--teal-600);
+}
+.result-card > h2,
+.completion-actions > h2 {
+  padding: 0.65rem 0.85rem;
+  background: rgba(255,255,255,0.65);
+  border-left: 5px solid var(--green-700);
+  border-radius: 0 10px 10px 0;
+}
+
+.ai-support fieldset {
+  background: var(--teal-100);
+  border-color: #b9e3e8;
+}
+.ai-support .choice-card {
+  background: var(--white);
+}
+.ai-support .choice-card:has(input:checked) {
+  border-color: var(--teal-600);
+  box-shadow: 0 0 0 2px rgba(22,143,161,0.12);
+}
+.site-footer { justify-content: center; text-align: center; }
