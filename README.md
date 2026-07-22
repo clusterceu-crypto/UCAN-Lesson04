@@ -1,4 +1,4 @@
-# UCAN Lesson 04 — Content Enrichment v1.1.3
+# UCAN Lesson 04 — Learning Clarity & Timebox v1.1.4
 
 ## Status
 
@@ -58,3 +58,11 @@ python3 -m http.server 8080
 ```
 
 Open `http://localhost:8080/` from the package root.
+
+
+## v1.1.4 timebox and simplification
+
+- learner-facing duration changed to 20–30 minutes;
+- resources and AI support marked as optional;
+- separate novice/experienced pathways removed;
+- AI support reduced to two modes: Help complete and Review result.
