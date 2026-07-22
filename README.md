@@ -1,27 +1,45 @@
-# UCAN Заняття 04 — HTML/LMS Controlled Upgrade v1.1.1
+# UCAN Lesson 04 — Content Enrichment v1.1.3
 
 ## Status
 
-- Architecture baseline: `UCAN-AF-HTML-v1.2-20260722`
-- HTML/LMS Standard: v1.2 — Current
-- Canonical Component Contract: v1.0 — Mandatory
-- Upgrade type: controlled navigation hotfix over Final Release v1.1
-- Learning content: preserved
+- Upgrade type: controlled learner-content enrichment
+- Runtime baseline: Lesson 04 v1.1.2 Learner UX Harmonization
+- Learning architecture: preserved
+- Assessment logic: preserved
+- Portfolio field architecture: preserved
+- Navigation and local storage: preserved
 
-## Canonical source lineage
+## Purpose
 
-- Final Lesson: `UCAN_Заняття_04_Фінальна_Редакція_v1.0 (2).docx`
-- Designer Package: `UCAN_Заняття_04_Designer_Package_v1.1.docx`
-- AI Visual Generation Pack: `UCAN_Заняття_04_AI_Visual_Generation_Pack_v1.1.docx`
-- Runtime baseline: `UCAN_Заняття_04_Final_Release_v1.0.zip`
-- Approved RC lineage: `UCAN_Заняття_04_HTML_RC_v1.1.zip`
+This release improves the instructional usefulness of Lesson 04 for both first-time and experienced participants. It adds plain-language explanations, concrete examples and explicit transfer prompts without replacing the canonical lesson logic.
 
-The Final Release v1.0 runtime members and RC v1.1 members were byte-identical before this upgrade.
+## Main changes
+
+- Seven steps on the page `Як читати міжнародний кейс` now include:
+  - a plain-language explanation;
+  - a concrete or explicitly hypothetical example;
+  - a question for applying the step to the participant's own community.
+- The case page now explains:
+  - what is confirmed by an official source;
+  - how the case may help a community;
+  - what cannot be transferred automatically;
+  - how the principle could look in a hypothetical community situation.
+- Added separate guidance for:
+  - participants who are new to the topic;
+  - participants who already have practical experience.
+- AI modes now support learning more directly:
+  - advice explains difficult points simply;
+  - help works one field at a time through guiding questions;
+  - review checks the completed result against lesson criteria.
+
+## Evidence boundary
+
+No new external factual claims were introduced. New community examples are explicitly marked as hypothetical. Statements about Copenhagen, Barcelona, EU Cities Mission and SUN4Ukraine remain within the factual boundaries already present in Lesson 04.
 
 ## Package structure
 
 ```text
-UCAN_Lesson_04_HTML_v1.1/
+UCAN_Lesson_04_HTML_v1.1.3_Content_Enrichment/
 ├── index.html
 ├── css/style.css
 ├── js/script.js
@@ -29,54 +47,9 @@ UCAN_Lesson_04_HTML_v1.1/
 │   ├── L04-A01_International_to_Local_First_Step_v1.0.png
 │   ├── L04-A02_EU_Cities_Mission_System_v1.0.png
 │   └── L04-A03_Copy_or_Adapt_v1.0.png
+├── Content_Enrichment_Change_Log.md
 └── README.md
 ```
-
-## Controlled changes
-
-- semantic previous/next lesson terminology;
-- canonical header reset and separate full-data reset;
-- fixed bottom section navigation;
-- canonical button and emoji labels;
-- direct local Portfolio PDF download with browser print as secondary fallback;
-- prompt preview dialog and copy workflow;
-- official ChatGPT and Gemini actions with learner-controlled paste;
-- configuration-controlled completion routing;
-- scoped state reset and storage metadata;
-- accessibility, mobile and print refinements required by Standard v1.2.
-
-
-## Course navigation
-
-- Previous lesson: `https://clusterceu-crypto.github.io/UCAN-Lesson03`
-- Current lesson: `https://clusterceu-crypto.github.io/UCAN-Lesson04`
-- Next lesson: `https://clusterceu-crypto.github.io/UCAN-Lesson05`
-
-The completion page exposes previous and next lesson links only when the corresponding URLs are configured. Links open in the same browser tab.
-
-## Local storage
-
-Existing learner data remain compatible under `ucan_l04_v1`:
-
-- `ucan_l04_v1:page`
-- `ucan_l04_v1:visited`
-- `ucan_l04_v1:transition`
-- `ucan_l04_v1:selfCheck`
-- `ucan_l04_v1:portfolio`
-- `ucan_l04_v1:assessment`
-
-Added metadata key:
-
-- `ucan_l04_v1:meta`
-
-The field schemas and assessment payloads are unchanged. The header reset preserves the Portfolio; the explicit footer danger action clears all lesson-local state only after confirmation.
-
-## Privacy and portability
-
-- No analytics, cookies, remote fonts, external JavaScript libraries or automatic data transmission.
-- Portfolio PDF is generated locally in the browser.
-- ChatGPT and Gemini open only after a learner action; prompt submission is never automatic.
-- All runtime paths are relative and the package works from a local static server.
 
 ## Launch
 
