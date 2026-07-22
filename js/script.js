@@ -1,14 +1,31 @@
 (() => {
   'use strict';
 
-  const STORAGE_PREFIX = 'ucan_l04_v1';
+  const CONFIG = Object.freeze({
+    lessonId: 'L04',
+    currentLessonLabel: 'Заняття 04',
+    storageNamespace: 'ucan_l04_v1',
+    storageSchemaVersion: '1.1',
+    releaseVersion: '1.1',
+    portfolioTitle: 'Карта адаптації міжнародного кліматичного досвіду для громади',
+    portfolioLabel: 'Портфель мера',
+    portfolioFilenamePattern: 'UCAN_Карта_адаптації_міжнародного_кліматичного_досвіду_{community}.pdf',
+    chatgptUrl: 'https://chatgpt.com/',
+    geminiUrl: 'https://gemini.google.com/app',
+    nextLessonUrl: '',
+    nextLessonTheme: 'природоорієнтовані рішення',
+    assessmentGate: true
+  });
+
+  const STORAGE_PREFIX = CONFIG.storageNamespace;
   const keys = {
     page: `${STORAGE_PREFIX}:page`,
     visited: `${STORAGE_PREFIX}:visited`,
     transition: `${STORAGE_PREFIX}:transition`,
     selfCheck: `${STORAGE_PREFIX}:selfCheck`,
     portfolio: `${STORAGE_PREFIX}:portfolio`,
-    assessment: `${STORAGE_PREFIX}:assessment`
+    assessment: `${STORAGE_PREFIX}:assessment`,
+    meta: `${STORAGE_PREFIX}:meta`
   };
 
   const pages = Array.from(document.querySelectorAll('.lesson-page'));
@@ -102,7 +119,7 @@
   const portfolioFields = [
     ['community', 'Ваша громада'],
     ['local_challenge', 'Локальний виклик'],
-    ['prior_context', 'Контекст із Заняття 03'],
+    ['prior_context', 'Контекст із попереднього заняття'],
     ['case_title', 'Міжнародний кейс або принцип'],
     ['official_source', 'Офіційне джерело'],
     ['confirmed_evidence', 'Що підтверджує джерело'],
@@ -112,13 +129,14 @@
     ['risk', 'Головний ризик'],
     ['partner', 'Кого потрібно залучити'],
     ['success_signals', '2–3 ознаки доцільності'],
-    ['next_lesson_note', 'Що перевірити у Занятті 05']
+    ['next_lesson_note', 'Що перевірити у наступному занятті']
   ];
 
   let storageAvailable = true;
   let currentPage = 0;
   let visited = new Set([0]);
   let assessmentPassed = false;
+  let promptReady = false;
 
   function announce(message, isError = false) {
     globalStatus.textContent = message || '';
@@ -200,11 +218,19 @@
     pageLabel.textContent = `Сторінка ${pageNumber} з ${total}`;
     navPageCount.textContent = `${pageNumber} / ${total}`;
     prevButton.disabled = currentPage === 0;
+    prevButton.setAttribute('aria-disabled', String(prevButton.disabled));
 
     const lastPage = currentPage === total - 1;
-    const blockedByTest = isAssessmentPage(currentPage) && !assessmentPassed;
+    const blockedByTest = CONFIG.assessmentGate && isAssessmentPage(currentPage) && !assessmentPassed;
     nextButton.disabled = lastPage || blockedByTest;
-    nextButton.textContent = blockedByTest ? 'Спочатку завершіть тест' : 'Далі';
+    nextButton.setAttribute('aria-disabled', String(nextButton.disabled));
+    if (blockedByTest) {
+      nextButton.setAttribute('aria-label', 'Наступний розділ — спочатку завершіть тест');
+      nextButton.title = 'Спочатку завершіть тест';
+    } else {
+      nextButton.setAttribute('aria-label', 'Наступний розділ');
+      nextButton.removeAttribute('title');
+    }
   }
 
   function updateProgress() {
@@ -496,12 +522,233 @@
     return cleaned || 'громада';
   }
 
-  function printPortfolio() {
+  function pdfFilename(data) {
+    return CONFIG.portfolioFilenamePattern.replace('{community}', sanitizeFilename(data.community));
+  }
+
+  function wrapCanvasText(context, text, maxWidth) {
+    const value = String(text || '—').replace(/\r\n?/g, '\n');
+    const paragraphs = value.split('\n');
+    const lines = [];
+    paragraphs.forEach((paragraph, paragraphIndex) => {
+      const words = paragraph.split(/\s+/).filter(Boolean);
+      if (words.length === 0) {
+        lines.push('');
+      } else {
+        let line = '';
+        words.forEach(word => {
+          const candidate = line ? `${line} ${word}` : word;
+          if (context.measureText(candidate).width <= maxWidth) {
+            line = candidate;
+            return;
+          }
+          if (line) lines.push(line);
+          if (context.measureText(word).width <= maxWidth) {
+            line = word;
+            return;
+          }
+          let fragment = '';
+          Array.from(word).forEach(character => {
+            const next = fragment + character;
+            if (context.measureText(next).width > maxWidth && fragment) {
+              lines.push(fragment);
+              fragment = character;
+            } else {
+              fragment = next;
+            }
+          });
+          line = fragment;
+        });
+        if (line) lines.push(line);
+      }
+      if (paragraphIndex < paragraphs.length - 1) lines.push('');
+    });
+    return lines;
+  }
+
+  function createPortfolioPdfCanvases(data) {
+    const width = 1240;
+    const height = 1754;
+    const margin = 92;
+    const maxWidth = width - margin * 2;
+    const bottom = height - margin;
+    const canvases = [];
+    let canvas;
+    let context;
+    let y;
+
+    function newPage() {
+      canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      context = canvas.getContext('2d', { alpha: false });
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, width, height);
+      canvases.push(canvas);
+      y = margin;
+    }
+
+    function ensureSpace(required) {
+      if (y + required > bottom) newPage();
+    }
+
+    function drawText(text, options = {}) {
+      const fontSize = options.fontSize || 28;
+      const lineHeight = options.lineHeight || Math.round(fontSize * 1.42);
+      const weight = options.weight || 400;
+      const color = options.color || '#1f2a33';
+      const gapAfter = options.gapAfter ?? 18;
+      context.font = `${weight} ${fontSize}px Arial, "DejaVu Sans", sans-serif`;
+      context.fillStyle = color;
+      const lines = wrapCanvasText(context, text, options.maxWidth || maxWidth);
+      for (const line of lines) {
+        ensureSpace(lineHeight + gapAfter);
+        if (line) context.fillText(line, margin, y);
+        y += lineHeight;
+      }
+      y += gapAfter;
+    }
+
+    newPage();
+    drawText(CONFIG.portfolioTitle, { fontSize: 42, lineHeight: 54, weight: 700, color: '#123f68', gapAfter: 10 });
+    drawText(CONFIG.portfolioLabel, { fontSize: 30, lineHeight: 40, weight: 700, color: '#2d7b55', gapAfter: 34 });
+    drawText('Локально створений навчальний артефакт. Дані не передавалися на сервер.', { fontSize: 22, lineHeight: 32, color: '#47545e', gapAfter: 32 });
+
+    portfolioFields.forEach(([key, label]) => {
+      ensureSpace(110);
+      context.strokeStyle = '#cfd9df';
+      context.lineWidth = 2;
+      context.beginPath();
+      context.moveTo(margin, y);
+      context.lineTo(width - margin, y);
+      context.stroke();
+      y += 24;
+      drawText(label, { fontSize: 24, lineHeight: 34, weight: 700, color: '#123f68', gapAfter: 8 });
+      drawText((data[key] || '').trim() || '—', { fontSize: 24, lineHeight: 36, color: '#1f2a33', gapAfter: 28 });
+    });
+
+    ensureSpace(130);
+    context.strokeStyle = '#cfd9df';
+    context.beginPath();
+    context.moveTo(margin, y);
+    context.lineTo(width - margin, y);
+    context.stroke();
+    y += 24;
+    drawText('Примітка', { fontSize: 24, lineHeight: 34, weight: 700, color: '#123f68', gapAfter: 8 });
+    drawText('Цей PDF можна за Вашим рішенням передати AI-помічнику для аналізу, уточнення або вдосконалення запропонованого рішення. Не додавайте персональні чи конфіденційні дані.', { fontSize: 22, lineHeight: 33, color: '#47545e', gapAfter: 0 });
+    return canvases;
+  }
+
+  function base64ToBytes(base64) {
+    const binary = window.atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+    return bytes;
+  }
+
+  function buildImagePdf(canvases) {
+    const encoder = new TextEncoder();
+    const chunks = [];
+    const offsets = [0];
+    let length = 0;
+    const pushBytes = bytes => { chunks.push(bytes); length += bytes.length; };
+    const pushText = text => pushBytes(encoder.encode(text));
+    const imageRecords = canvases.map(canvas => {
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+      return { width: canvas.width, height: canvas.height, bytes: base64ToBytes(dataUrl.split(',')[1]) };
+    });
+    const objectCount = 2 + imageRecords.length * 3;
+    const pageIds = imageRecords.map((_, index) => 3 + index * 3);
+
+    pushText('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+    function startObject(id) { offsets[id] = length; pushText(`${id} 0 obj\n`); }
+    function endObject() { pushText('endobj\n'); }
+
+    startObject(1);
+    pushText('<< /Type /Catalog /Pages 2 0 R >>\n');
+    endObject();
+
+    startObject(2);
+    pushText(`<< /Type /Pages /Count ${pageIds.length} /Kids [${pageIds.map(id => `${id} 0 R`).join(' ')}] >>\n`);
+    endObject();
+
+    imageRecords.forEach((record, index) => {
+      const pageId = 3 + index * 3;
+      const contentId = pageId + 1;
+      const imageId = pageId + 2;
+      const imageName = `Im${index}`;
+      const content = `q\n595 0 0 842 0 0 cm\n/${imageName} Do\nQ\n`;
+      const contentBytes = encoder.encode(content);
+
+      startObject(pageId);
+      pushText(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /${imageName} ${imageId} 0 R >> >> /Contents ${contentId} 0 R >>\n`);
+      endObject();
+
+      startObject(contentId);
+      pushText(`<< /Length ${contentBytes.length} >>\nstream\n`);
+      pushBytes(contentBytes);
+      pushText('endstream\n');
+      endObject();
+
+      startObject(imageId);
+      pushText(`<< /Type /XObject /Subtype /Image /Width ${record.width} /Height ${record.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${record.bytes.length} >>\nstream\n`);
+      pushBytes(record.bytes);
+      pushText('\nendstream\n');
+      endObject();
+    });
+
+    const xrefOffset = length;
+    pushText(`xref\n0 ${objectCount + 1}\n`);
+    pushText('0000000000 65535 f \n');
+    for (let id = 1; id <= objectCount; id += 1) {
+      pushText(`${String(offsets[id]).padStart(10, '0')} 00000 n \n`);
+    }
+    pushText(`trailer\n<< /Size ${objectCount + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`);
+    return new Blob(chunks, { type: 'application/pdf' });
+  }
+
+  function setLoading(button, loading) {
+    button.disabled = loading;
+    button.setAttribute('aria-busy', String(loading));
+    const label = button.querySelector('.button-label');
+    if (label) label.textContent = loading ? 'Створення PDF…' : 'Завантажити PDF';
+  }
+
+  async function downloadPortfolioPdf() {
+    const button = document.getElementById('download-portfolio');
+    const status = document.getElementById('portfolio-status');
+    const data = getPortfolioData();
+    savePortfolio();
+    renderPortfolioSummary(data);
+    setLoading(button, true);
+    status.textContent = 'Створюємо PDF локально у Вашому браузері…';
+    try {
+      await new Promise(resolve => window.requestAnimationFrame(resolve));
+      const canvases = createPortfolioPdfCanvases(data);
+      const blob = buildImagePdf(canvases);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = pdfFilename(data);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+      status.textContent = 'PDF створено та завантажено. Дані залишилися у Вашому браузері.';
+    } catch (error) {
+      console.error('Portfolio PDF generation failed', error);
+      status.textContent = 'Не вдалося створити PDF. Скористайтеся вторинною дією «Друкувати через браузер».';
+    } finally {
+      setLoading(button, false);
+    }
+  }
+
+  function printPortfolioFallback() {
     const data = getPortfolioData();
     savePortfolio();
     renderPortfolioSummary(data);
     const oldTitle = document.title;
-    document.title = `UCAN_L04_Карта_адаптації_${sanitizeFilename(data.community)}`;
+    document.title = `UCAN_Карта_адаптації_${sanitizeFilename(data.community)}`;
     document.body.classList.add('print-portfolio');
     const cleanup = () => {
       document.body.classList.remove('print-portfolio');
@@ -513,7 +760,7 @@
       window.print();
     } catch (error) {
       cleanup();
-      document.getElementById('portfolio-status').textContent = 'Не вдалося відкрити друк. Скористайтеся командою друку браузера.';
+      document.getElementById('portfolio-status').textContent = 'Не вдалося відкрити друк. Використайте завантаження PDF.';
     }
   }
 
@@ -541,7 +788,7 @@
     const modeInstructions = {
       'fact-check': 'Перевірте, чи чітко відокремлено те, що підтверджує джерело, від припущень про можливе застосування у громаді.',
       questions: 'Сформуйте уточнювальні питання про умови адаптації, використовуючи лише наведений контекст.',
-      compress: 'Стисніть погоджений контекст для передачі до Заняття 05 без додавання нових фактів.'
+      compress: 'Стисніть погоджений контекст для передачі до наступного заняття без додавання нових фактів.'
     };
 
     return [
@@ -559,12 +806,40 @@
     ].join('\n');
   }
 
+  function currentAiPrompt() {
+    const selected = document.querySelector('input[name="ai-mode"]:checked');
+    return buildAiPrompt(selected?.value || 'fact-check', getPortfolioData());
+  }
+
+  function setPromptReady(ready) {
+    promptReady = Boolean(ready);
+    const copyButton = document.getElementById('copy-ai-prompt');
+    copyButton.disabled = !promptReady;
+    ['open-chatgpt', 'open-gemini'].forEach(id => {
+      const link = document.getElementById(id);
+      link.setAttribute('aria-disabled', String(!promptReady));
+      link.tabIndex = promptReady ? 0 : -1;
+    });
+  }
+
+  function openPromptDialog(prompt) {
+    const dialog = document.getElementById('ai-prompt-dialog');
+    document.getElementById('ai-prompt-dialog-content').textContent = prompt;
+    if (typeof dialog.showModal === 'function') {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute('open', '');
+    }
+    document.getElementById('ai-prompt-dialog-content').focus();
+  }
+
   function handleAiPrompt(event) {
     event.preventDefault();
-    const selected = document.querySelector('input[name="ai-mode"]:checked');
-    const prompt = buildAiPrompt(selected?.value || 'fact-check', getPortfolioData());
+    const prompt = currentAiPrompt();
     document.getElementById('ai-prompt-preview').textContent = prompt;
-    document.getElementById('ai-status').textContent = 'Запит підготовлено. Перевірте його перед копіюванням.';
+    document.getElementById('ai-status').textContent = 'Запит підготовлено. Перевірте його перед копіюванням або відкриттям зовнішнього сервісу.';
+    setPromptReady(true);
+    openPromptDialog(prompt);
   }
 
   async function copyText(text, statusElement, successMessage) {
@@ -611,10 +886,55 @@
     });
   }
 
-  function resetAllProgress() {
-    if (!window.confirm('Скинути весь локальний прогрес Заняття 04, включно з Картою адаптації та тестом?')) return;
+  function resetLearningProgress() {
+    const confirmed = window.confirm('Почати заняття спочатку? Буде очищено відвідані сторінки, нотатку переходу, самоперевірку та підсумковий тест. Карта адаптації залишиться збереженою.');
+    if (!confirmed) return;
+    [keys.page, keys.visited, keys.transition, keys.selfCheck, keys.assessment].forEach(storageRemove);
+    assessmentPassed = false;
+    visited = new Set([0]);
+    const transitionField = document.getElementById('transition-note');
+    if (transitionField) transitionField.value = '';
+    renderSelfCheck();
+    renderAssessment();
+    setPromptReady(false);
+    document.getElementById('ai-prompt-preview').textContent = 'Заповніть Карту адаптації та оберіть режим підтримки.';
+    showPage(0);
+    announce('Навчальний прогрес очищено. Карта адаптації збережена.');
+  }
+
+  function resetAllLocalData() {
+    const confirmed = window.confirm('Очистити всі локальні дані цього заняття, включно з Картою адаптації, нотатками, самоперевіркою та підсумковим тестом? Цю дію не можна скасувати.');
+    if (!confirmed) return;
     Object.values(keys).forEach(storageRemove);
+    try { sessionStorage.setItem(`${STORAGE_PREFIX}:notice`, 'Усі локальні дані заняття очищено.'); } catch (error) { /* optional status handoff */ }
     window.location.reload();
+  }
+
+  function configureCompletionActions() {
+    document.getElementById('return-start').addEventListener('click', () => showPage(0));
+    const nextLink = document.getElementById('next-lesson-link');
+    if (CONFIG.nextLessonUrl) {
+      nextLink.href = CONFIG.nextLessonUrl;
+      nextLink.hidden = false;
+    } else {
+      nextLink.hidden = true;
+      nextLink.removeAttribute('href');
+    }
+  }
+
+  function ensureStorageMetadata() {
+    const existing = storageGet(keys.meta, null);
+    const expected = { schemaVersion: CONFIG.storageSchemaVersion, releaseVersion: CONFIG.releaseVersion };
+    if (!existing || existing.schemaVersion !== expected.schemaVersion || existing.releaseVersion !== expected.releaseVersion) {
+      storageSet(keys.meta, expected);
+    }
+  }
+
+  function configureExternalActions() {
+    const chatgptLink = document.getElementById('open-chatgpt');
+    const geminiLink = document.getElementById('open-gemini');
+    chatgptLink.href = CONFIG.chatgptUrl;
+    geminiLink.href = CONFIG.geminiUrl;
   }
 
   function bindEvents() {
@@ -627,8 +947,17 @@
     document.getElementById('assessment-reset').addEventListener('click', resetAssessment);
     document.getElementById('portfolio-form').addEventListener('submit', handlePortfolioSubmit);
     document.getElementById('clear-portfolio').addEventListener('click', clearPortfolio);
-    document.getElementById('print-portfolio').addEventListener('click', printPortfolio);
+    document.getElementById('download-portfolio').addEventListener('click', downloadPortfolioPdf);
+    document.getElementById('print-portfolio').addEventListener('click', printPortfolioFallback);
     document.getElementById('ai-support-form').addEventListener('submit', handleAiPrompt);
+
+    document.querySelectorAll('input[name="ai-mode"]').forEach(input => {
+      input.addEventListener('change', () => {
+        setPromptReady(false);
+        document.getElementById('ai-status').textContent = 'Режим змінено. Перегляньте оновлений запит перед копіюванням.';
+      });
+    });
+
     document.getElementById('copy-ai-prompt').addEventListener('click', () => {
       copyText(
         document.getElementById('ai-prompt-preview').textContent,
@@ -636,24 +965,60 @@
         'Запит скопійовано. Ви самі вирішуєте, чи передавати його зовнішньому AI-інструменту.'
       );
     });
+    document.getElementById('copy-ai-prompt-dialog').addEventListener('click', () => {
+      copyText(
+        document.getElementById('ai-prompt-dialog-content').textContent,
+        document.getElementById('ai-status'),
+        'Запит скопійовано. Ви самі вирішуєте, чи передавати його зовнішньому AI-інструменту.'
+      );
+    });
+    document.getElementById('close-ai-prompt-dialog').addEventListener('click', () => {
+      const dialog = document.getElementById('ai-prompt-dialog');
+      if (typeof dialog.close === 'function') dialog.close();
+      else dialog.removeAttribute('open');
+    });
+    document.getElementById('ai-prompt-dialog').addEventListener('close', () => {
+      document.getElementById('preview-ai-prompt').focus();
+    });
+
+    ['open-chatgpt', 'open-gemini'].forEach(id => {
+      const link = document.getElementById(id);
+      link.addEventListener('click', event => {
+        if (!promptReady) {
+          event.preventDefault();
+          document.getElementById('ai-status').textContent = 'Спочатку перегляньте запит.';
+          return;
+        }
+        copyText(
+          document.getElementById('ai-prompt-preview').textContent,
+          document.getElementById('ai-status'),
+          'Запит скопійовано. Вставте його у відкритому сервісі лише за власним рішенням.'
+        );
+      });
+    });
+
     document.getElementById('copy-next-context').addEventListener('click', () => {
       const text = buildNextContext();
       document.getElementById('next-context-preview').textContent = text;
       copyText(text, document.getElementById('context-status'), 'Контекст для наступного заняття скопійовано.');
     });
-    document.getElementById('reset-all-top').addEventListener('click', resetAllProgress);
-    document.getElementById('reset-all-bottom').addEventListener('click', resetAllProgress);
+    document.getElementById('reset-progress-top').addEventListener('click', resetLearningProgress);
+    document.getElementById('reset-all-bottom').addEventListener('click', resetAllLocalData);
+    configureExternalActions();
+    configureCompletionActions();
 
     document.addEventListener('keydown', event => {
       const target = event.target;
       const typing = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target?.isContentEditable;
-      if (typing || event.altKey || event.ctrlKey || event.metaKey) return;
+      const dialogOpen = document.getElementById('ai-prompt-dialog').open;
+      if (typing || dialogOpen || event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.key === 'ArrowLeft' && !prevButton.disabled) showPage(currentPage - 1);
       if (event.key === 'ArrowRight' && !nextButton.disabled) showPage(currentPage + 1);
     });
   }
 
   function initialize() {
+    ensureStorageMetadata();
     const savedAssessment = storageGet(keys.assessment, { passed: false });
     assessmentPassed = Boolean(savedAssessment.passed);
     const savedVisited = storageGet(keys.visited, [0]);
@@ -669,6 +1034,12 @@
     let savedPage = storageGet(keys.page, 0);
     if (!Number.isInteger(savedPage) || savedPage < 0 || savedPage >= pages.length) savedPage = 0;
     showPage(savedPage, { focus: false });
+    setPromptReady(false);
+    try {
+      const noticeKey = `${STORAGE_PREFIX}:notice`;
+      const notice = sessionStorage.getItem(noticeKey);
+      if (notice) { announce(notice); sessionStorage.removeItem(noticeKey); }
+    } catch (error) { /* session status is optional */ }
   }
 
   initialize();

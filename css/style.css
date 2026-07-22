@@ -32,6 +32,7 @@ body {
   font-family: Aptos, Arial, sans-serif;
   font-size: 1rem;
   line-height: 1.62;
+  padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
 }
 
 img { max-width: 100%; height: auto; display: block; }
@@ -364,19 +365,22 @@ blockquote {
 }
 
 .lesson-nav {
-  position: static;
-  z-index: 15;
+  position: fixed;
+  left: 50%;
+  bottom: max(0.5rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 40;
   display: grid;
-  grid-template-columns: minmax(110px, auto) 1fr minmax(110px, auto);
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 0.75rem;
-  width: min(100% - 2rem, var(--content));
-  margin: 0 auto 1rem;
+  width: min(calc(100% - 1rem), var(--content));
+  margin: 0;
   padding: 0.75rem;
-  background: rgba(255,255,255,0.96);
+  background: rgba(255,255,255,0.98);
   border: 1px solid var(--grey-200);
   border-radius: 14px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 10px 30px rgba(18,63,104,0.22);
   backdrop-filter: blur(8px);
 }
 .nav-page-count { text-align: center; color: var(--grey-700); font-weight: 700; }
@@ -393,6 +397,88 @@ blockquote {
   font-size: 0.9rem;
 }
 
+
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.lesson-page h1,
+.lesson-page h2,
+.lesson-page h3,
+button,
+a.button,
+input,
+textarea,
+[tabindex] {
+  scroll-margin-top: 7rem;
+  scroll-margin-bottom: 7rem;
+}
+
+.button-quiet-on-light {
+  color: var(--blue-900);
+  background: var(--grey-100);
+  border-color: var(--grey-300);
+}
+.button-quiet-on-light:hover:not(:disabled) { background: var(--blue-100); }
+.button-external {
+  color: var(--blue-900);
+  background: var(--white);
+  border-color: var(--teal-600);
+  text-decoration: none;
+}
+.button-external:hover { background: var(--teal-100); }
+.button-external[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.button[aria-busy="true"] { cursor: progress; }
+.portfolio-label {
+  margin: -0.5rem 0 1rem;
+  color: var(--green-700);
+  font-weight: 800;
+}
+
+.prompt-dialog {
+  width: min(92vw, 820px);
+  max-height: 88vh;
+  padding: 0;
+  color: var(--grey-900);
+  background: var(--white);
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 24px 70px rgba(18,63,104,0.34);
+}
+.prompt-dialog::backdrop { background: rgba(16, 31, 44, 0.66); }
+.dialog-card { padding: clamp(1rem, 3vw, 1.5rem); }
+.dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.dialog-header h2 { margin: 0; }
+.prompt-dialog pre {
+  max-height: 56vh;
+  overflow: auto;
+}
+.completion-actions {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  background: var(--blue-100);
+  border-radius: var(--radius);
+}
+.completion-actions h2 { margin-top: 0; }
+
 @media (min-width: 760px) {
   .opening-grid { grid-template-columns: minmax(220px, 0.75fr) 1.5fr; }
   .two-column-section { grid-template-columns: 1fr 1fr; }
@@ -407,10 +493,11 @@ blockquote {
   .progress-text { display: none; }
   .lesson-main { width: min(100% - 1rem, var(--content)); margin-top: 0.75rem; }
   .lesson-page { padding: 1.1rem; border-radius: 12px; }
-  .lesson-nav { width: calc(100% - 1rem); grid-template-columns: 1fr 1fr; }
-  .nav-page-count { grid-column: 1 / -1; grid-row: 1; }
-  #prev-page { grid-column: 1; grid-row: 2; }
-  #next-page { grid-column: 2; grid-row: 2; }
+  .lesson-nav { width: calc(100% - 0.5rem); gap: 0.35rem; padding: 0.5rem; }
+  .lesson-nav .button { min-height: 48px; padding: 0.45rem 0.35rem; font-size: 0.78rem; line-height: 1.2; }
+  .nav-page-count { font-size: 0.78rem; }
+  .dialog-header { flex-direction: column; }
+  .dialog-header .button { align-self: stretch; }
   .portfolio-summary dl > div { grid-template-columns: 1fr; gap: 0.25rem; }
   table { min-width: 560px; }
 }
@@ -426,8 +513,8 @@ blockquote {
 
 @media print {
   @page { size: A4; margin: 15mm; }
-  body { background: var(--white); color: #000; font-size: 10.5pt; }
-  .site-header, .progress-shell, .status-region, .lesson-nav, .site-footer, .skip-link, .button-row, .field-status, .form-status { display: none !important; }
+  body { background: var(--white); color: #000; font-size: 10.5pt; padding-bottom: 0; }
+  .site-header, .progress-shell, .status-region, .lesson-nav, .site-footer, .skip-link, .button-row, .field-status, .form-status, .prompt-dialog, .ai-external-actions { display: none !important; }
   .lesson-main { width: 100%; margin: 0; }
   .lesson-page { display: block !important; box-shadow: none; border-radius: 0; padding: 0; page-break-after: always; }
   .lesson-page[hidden] { display: block !important; }
@@ -463,3 +550,6 @@ blockquote {
     border-top: 1px solid #bbb;
   }
 }
+
+/* Canonical hidden-state enforcement for styled controls and panels. */
+[hidden] { display: none !important; }
