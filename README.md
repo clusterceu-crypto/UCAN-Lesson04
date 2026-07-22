@@ -1,4 +1,4 @@
-# UCAN Lesson 04 — Learning Clarity & Timebox v1.1.4
+# UCAN Lesson 04 — Learning Clarity & Timebox v1.1.5
 
 ## Status
 
@@ -60,9 +60,17 @@ python3 -m http.server 8080
 Open `http://localhost:8080/` from the package root.
 
 
-## v1.1.4 timebox and simplification
+## v1.1.5 timebox and simplification
 
 - learner-facing duration changed to 20–30 minutes;
 - resources and AI support marked as optional;
 - separate novice/experienced pathways removed;
 - AI support reduced to two modes: Help complete and Review result.
+
+
+## Content Evidence Update v1.1.5
+- Основний маршрут читання кейсу скорочено до 4 кроків; повна 7-крокова пам’ятка доступна за бажанням.
+- Додано доказовий кейс кліматичних укриттів у школах Барселони з офіційним оцінюванням результатів.
+- Додано умовний український сценарій відновлення амбулаторії та зупинки.
+- Додано необов’язковий Urban Adaptation Support Tool.
+- Зафіксовано, що відео не інтегрується без окремої мультимедійної матриці.

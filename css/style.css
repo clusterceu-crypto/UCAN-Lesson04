@@ -765,3 +765,36 @@ textarea,
   .case-reading-step { padding: 4.2rem 1rem 1rem; }
   .case-reading-step::before { left: 1rem; top: 1rem; }
 }
+
+/* v1.1.5 content-evidence enhancements */
+.extended-checklist,
+.ukraine-scenario,
+.remember-box,
+.featured-resource-card,
+.evidence-case-card {
+  border: 1px solid var(--border, #c8d3dc);
+  border-radius: 16px;
+  background: #fff;
+  padding: 1.1rem 1.2rem;
+  margin: 1.25rem 0;
+}
+.extended-checklist summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--brand-dark, #123f68);
+}
+.extended-checklist[open] summary { margin-bottom: .8rem; }
+.evidence-case-card { border-top: 6px solid #2f7d67; }
+.case-chain { font-size: .95rem; color: #43515d; }
+.case-result { background: #eef8f2; }
+.ukraine-scenario { background: #f4f8fb; border-left: 6px solid #356f9f; }
+.remember-box { background: #fff8e8; border-left: 6px solid #d59a22; }
+.featured-resource-card { border-top: 6px solid #356f9f; }
+.optional-video-note { margin-top: 1.4rem; }
+@media (max-width: 720px) {
+  .extended-checklist,
+  .ukraine-scenario,
+  .remember-box,
+  .featured-resource-card,
+  .evidence-case-card { padding: .95rem; border-radius: 12px; }
+}
