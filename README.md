@@ -1,11 +1,11 @@
-# UCAN Заняття 04 — HTML/LMS Controlled Upgrade v1.1
+# UCAN Заняття 04 — HTML/LMS Controlled Upgrade v1.1.1
 
 ## Status
 
 - Architecture baseline: `UCAN-AF-HTML-v1.2-20260722`
 - HTML/LMS Standard: v1.2 — Current
 - Canonical Component Contract: v1.0 — Mandatory
-- Upgrade type: controlled conformance upgrade of Final Release v1.0
+- Upgrade type: controlled navigation hotfix over Final Release v1.1
 - Learning content: preserved
 
 ## Canonical source lineage
@@ -44,6 +44,15 @@ UCAN_Lesson_04_HTML_v1.1/
 - configuration-controlled completion routing;
 - scoped state reset and storage metadata;
 - accessibility, mobile and print refinements required by Standard v1.2.
+
+
+## Course navigation
+
+- Previous lesson: `https://clusterceu-crypto.github.io/UCAN-Lesson03`
+- Current lesson: `https://clusterceu-crypto.github.io/UCAN-Lesson04`
+- Next lesson: `https://clusterceu-crypto.github.io/UCAN-Lesson05`
+
+The completion page exposes previous and next lesson links only when the corresponding URLs are configured. Links open in the same browser tab.
 
 ## Local storage
 

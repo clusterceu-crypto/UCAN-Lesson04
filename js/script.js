@@ -6,13 +6,15 @@
     currentLessonLabel: 'Заняття 04',
     storageNamespace: 'ucan_l04_v1',
     storageSchemaVersion: '1.1',
-    releaseVersion: '1.1',
+    releaseVersion: '1.1.1',
     portfolioTitle: 'Карта адаптації міжнародного кліматичного досвіду для громади',
     portfolioLabel: 'Портфель мера',
     portfolioFilenamePattern: 'UCAN_Карта_адаптації_міжнародного_кліматичного_досвіду_{community}.pdf',
     chatgptUrl: 'https://chatgpt.com/',
     geminiUrl: 'https://gemini.google.com/app',
-    nextLessonUrl: '',
+    previousLessonUrl: 'https://clusterceu-crypto.github.io/UCAN-Lesson03',
+    currentLessonUrl: 'https://clusterceu-crypto.github.io/UCAN-Lesson04',
+    nextLessonUrl: 'https://clusterceu-crypto.github.io/UCAN-Lesson05',
     nextLessonTheme: 'природоорієнтовані рішення',
     assessmentGate: true
   });
@@ -912,6 +914,16 @@
 
   function configureCompletionActions() {
     document.getElementById('return-start').addEventListener('click', () => showPage(0));
+
+    const previousLink = document.getElementById('previous-lesson-link');
+    if (CONFIG.previousLessonUrl) {
+      previousLink.href = CONFIG.previousLessonUrl;
+      previousLink.hidden = false;
+    } else {
+      previousLink.hidden = true;
+      previousLink.removeAttribute('href');
+    }
+
     const nextLink = document.getElementById('next-lesson-link');
     if (CONFIG.nextLessonUrl) {
       nextLink.href = CONFIG.nextLessonUrl;
