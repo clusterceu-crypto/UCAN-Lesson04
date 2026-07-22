@@ -6,7 +6,7 @@
     currentLessonLabel: 'Заняття 04',
     storageNamespace: 'ucan_l04_v1',
     storageSchemaVersion: '1.1',
-    releaseVersion: '1.1.4',
+    releaseVersion: '1.1.6',
     portfolioTitle: 'Карта адаптації міжнародного кліматичного досвіду для громади',
     portfolioLabel: 'Портфель мера',
     portfolioFilenamePattern: 'UCAN_Карта_адаптації_міжнародного_кліматичного_досвіду_{community}.pdf',

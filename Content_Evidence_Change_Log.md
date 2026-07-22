@@ -1,4 +1,4 @@
-# Lesson 04 — Content Evidence Change Log v1.1.5
+# Lesson 04 — Content Evidence Change Log v1.1.6
 
 ## Implemented
 - Learner-facing timebox retained as 20–30 minutes for the mandatory route.
@@ -13,3 +13,7 @@
 
 ## Source policy
 No numerical or outcome claim was added without an official municipal or public-health source. Conditional Ukrainian applications are explicitly labelled as hypothetical.
+
+## v1.1.6 — Learner-facing cleanup
+
+Removed the complete block “Відео з курсу «Циркулярна економіка»” because it described an internal course-production decision rather than learner content. No replacement text was added.
