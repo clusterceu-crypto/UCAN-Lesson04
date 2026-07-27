@@ -1,5 +1,13 @@
 # UCAN Lesson 04 — HTML Package v1.1.6
 
+## Production Policy
+
+- **Production Source of Truth:** `develop`
+- **Official Release Branch:** `main`
+- Усі Production-зміни, виправлення та Hotfix виконуються лише в `develop`.
+- Merge до `main` дозволений лише після проходження Release QA та підтвердження Release Package.
+- Governance standard: [UCAN Version Control & Repository Governance Standard v1.0](https://docs.google.com/document/d/1nfAxkvelQCMGhL5x3B_zrZ4fZpbyn5DJ/edit)
+
 ## Status
 
 - Release type: controlled learner-facing content and documentation update
