@@ -38,6 +38,13 @@
     list.hidden = !list.hidden;
     toggle.setAttribute('aria-expanded', String(!list.hidden));
   });
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || list.hidden) return;
+    event.preventDefault();
+    list.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.focus();
+  });
   host.replaceChildren(toggle, list);
 
   function update() {

@@ -409,9 +409,10 @@
 <p class="field-error" id="local_challenge-error"></p>
 </div>
 <div class="field-group">
-<label for="prior_context">Контекст із попереднього заняття <span class="optional-mark">необов’язково</span></label>
+<label for="prior_context">Контекст із попереднього заняття <span class="required-mark">обов’язково</span></label>
 <p class="field-hint" id="prior_context-hint">Кліматична дія або управлінське питання.</p>
-<textarea aria-describedby="prior_context-hint" id="prior_context" name="prior_context" rows="3"></textarea>
+<textarea aria-describedby="prior_context-hint prior_context-error" id="prior_context" name="prior_context" required="" rows="3"></textarea>
+<p class="field-error" id="prior_context-error"></p>
 </div>
 <div class="field-group">
 <label for="case_title">Міжнародний кейс або принцип <span class="required-mark">обов’язково</span></label>

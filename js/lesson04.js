@@ -183,6 +183,12 @@
     return pages[index]?.dataset.pageRole === 'assessment';
   }
 
+  function completionRecoveryMessage() {
+    if (!assessmentPassed) return 'Сторінка завершення відкриється після правильної відповіді на всі шість питань.';
+    if (!isPortfolioComplete()) return 'Заповніть усі поля Карти адаптації, щоб відкрити сторінку завершення.';
+    return '';
+  }
+
   function isPortfolioComplete() {
     return portfolioFields.every(([key]) => {
       const field = document.getElementById(key);
@@ -192,9 +198,10 @@
 
   function showPage(index, { focus = true } = {}) {
     if (index < 0 || index >= pages.length) return;
-    if (isCompletionPage(index) && !(assessmentPassed && isPortfolioComplete())) {
+    const recoveryMessage = isCompletionPage(index) ? completionRecoveryMessage() : '';
+    if (recoveryMessage) {
       index = pages.findIndex(page => page.dataset.pageRole === 'assessment');
-      announce(assessmentPassed ? 'Заповніть усі поля Карти адаптації, щоб відкрити сторінку завершення.' : 'Сторінка завершення відкриється після правильної відповіді на всі шість питань.', true);
+      announce(recoveryMessage, true);
     } else {
       announce('');
     }
@@ -218,7 +225,8 @@
         heading.setAttribute('tabindex', '-1');
         heading.focus({ preventScroll: true });
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
     }
   }
 
@@ -247,7 +255,7 @@
   }
 
   function updateProgress() {
-    const percent = Math.round((visited.size / pages.length) * 100);
+    const percent = Math.round(((currentPage + 1) / pages.length) * 100);
     progressFill.style.width = `${percent}%`;
     progressBar.setAttribute('aria-valuenow', String(percent));
     progressText.textContent = `${percent}%`;
@@ -488,7 +496,7 @@
   function renderPortfolioSummary(data = getPortfolioData()) {
     const summary = document.getElementById('portfolio-summary');
     const list = document.getElementById('portfolio-summary-list');
-    const complete = portfolioFields.every(([key]) => key === 'prior_context' || Boolean((data[key] || '').trim()));
+    const complete = portfolioFields.every(([key]) => Boolean((data[key] || '').trim()));
     list.textContent = '';
     portfolioFields.forEach(([key, label]) => {
       const wrapper = document.createElement('div');
@@ -1010,12 +1018,14 @@
 
     let savedPage = storageGet(keys.page, 0);
     if (!Number.isInteger(savedPage) || savedPage < 0 || savedPage >= pages.length) savedPage = 0;
-    showPage(savedPage, { focus: false });
+    const restoredRecoveryMessage = isCompletionPage(savedPage) ? completionRecoveryMessage() : '';
+    showPage(savedPage, { focus: true });
     setPromptReady(false);
     try {
       const noticeKey = `${STORAGE_PREFIX}:notice`;
       const notice = sessionStorage.getItem(noticeKey);
-      if (notice) { announce(notice); sessionStorage.removeItem(noticeKey); }
+      if (notice && !restoredRecoveryMessage) announce(notice);
+      if (notice) sessionStorage.removeItem(noticeKey);
     } catch (error) { /* session status is optional */ }
   }
 

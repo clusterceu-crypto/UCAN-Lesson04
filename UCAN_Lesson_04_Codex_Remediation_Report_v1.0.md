@@ -66,3 +66,17 @@ Lessons 02–03 were used only as learner-facing UX references for the header/pr
 - The completion page uses `← До Заняття 03` and `Перейти до Заняття 05 →`; reaching it remains conditional on the combined gate.
 
 Browser checks remain required for the changed contents control, responsive behavior, prompt workflow, focus behavior, and completion links.
+
+## Targeted Browser Defect Hotfix — 03.08.2026
+
+- Baseline HEAD: `0c56fb9e9c2a1917b45d2512be0751af3bf5e0da` on `develop`.
+- Files changed: `index.html`, `js/lesson04.js`, `js/ucan-compat-runtime.js`, and `tests/static/lesson04-static-checks.ps1`.
+- HOTFIX-L04-001: restored startup navigation now uses the existing controlled heading-focus path with `preventScroll: true`; scrolling respects reduced-motion preference.
+- HOTFIX-L04-002: Escape closes an open “Зміст заняття” control and returns focus to its trigger.
+- HOTFIX-L04-003: progress uses route position: `Math.round(((currentPage + 1) / pages.length) * 100)`.
+- HOTFIX-L04-004: one centralized recovery-message function enforces assessment-first, then Portfolio-incomplete priority and suppresses a competing session notice during recovery.
+- HOTFIX-L04-005: `prior_context` remains in the 13-field collection and is now visibly and semantically required; its prior optional marker is removed.
+
+Static verification passed: the updated static suite, `node --check js/lesson04.js`, `node --check js/ucan-compat-runtime.js`, and `git diff --check`. The suite also reconfirmed 10 pages, P01–P03 only in P08, exact payload hashes, answer key, namespace, combined gate, reset/delete separation, links, and unchanged assets.
+
+Targeted Chromium scenarios could not run: the in-app browser runtime failed before tab creation with `failed to write kernel assets: The system cannot find the path specified. (os error 3)`. This is the sole remaining verification blocker; it is not a source-code defect finding. No Git operation was performed.
