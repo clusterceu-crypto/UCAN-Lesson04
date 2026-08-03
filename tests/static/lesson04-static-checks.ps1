@@ -34,6 +34,10 @@ Assert-Check ($js -match 'window\.UCAN_L04_APPROVED_PROMPTS\?\.\[promptId\]' -an
 Assert-Check ($js -match 'assessmentPassed\s*&&\s*isPortfolioComplete\(\)' -and $js -match 'function isPortfolioComplete\(\)') 'combined completion gate checks assessment and portfolio'
 Assert-Check ($js -match 'field\.value\.trim\(\)') 'portfolio completeness trims field values'
 Assert-Check ($js -match 'function savePortfolio\(\)[\s\S]*?updateNavigation\(\)' -and $js -match 'function clearPortfolio\(\)[\s\S]*?updateNavigation\(\)') 'portfolio changes refresh the completion gate'
+Assert-Check ($js -match 'function showPage\(index[\s\S]*?isCompletionPage\(index\)\s*&&\s*!\(assessmentPassed\s*&&\s*isPortfolioComplete\(\)\)') 'restored completion page is safely guarded'
+$resetBlock = [regex]::Match($js, 'function resetLearningProgress\(\)[\s\S]*?\n  \}').Value
+Assert-Check ($resetBlock -match 'keys\.assessment' -and $resetBlock -match 'assessmentPassed\s*=\s*false' -and $resetBlock -notmatch 'keys\.portfolio') 'reset progress preserves portfolio data'
+Assert-Check ($js -match 'function clearPortfolio\(\)[\s\S]*?storageRemove\(keys\.portfolio\)') 'delete portfolio follows its existing storage contract'
 
 $registryMatch = [regex]::Match($config, 'window\.UCAN_L04_APPROVED_PROMPTS = Object\.freeze\((?<json>\{[\s\S]*\})\);')
 Assert-Check ($registryMatch.Success) 'approved prompt registry present'

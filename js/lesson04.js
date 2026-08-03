@@ -235,8 +235,11 @@
     nextButton.disabled = lastPage || blockedByTest;
     nextButton.setAttribute('aria-disabled', String(nextButton.disabled));
     if (blockedByTest) {
-      nextButton.setAttribute('aria-label', 'Наступний розділ — спочатку завершіть тест');
-      nextButton.title = 'Спочатку завершіть тест';
+      const gateMessage = assessmentPassed
+        ? 'Наступний розділ — заповніть усі поля Карти адаптації'
+        : 'Наступний розділ — спочатку завершіть тест';
+      nextButton.setAttribute('aria-label', gateMessage);
+      nextButton.title = gateMessage;
     } else {
       nextButton.setAttribute('aria-label', 'Наступний розділ');
       nextButton.removeAttribute('title');

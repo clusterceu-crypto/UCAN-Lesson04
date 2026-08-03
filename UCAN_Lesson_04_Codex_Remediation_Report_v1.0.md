@@ -1,0 +1,56 @@
+# UCAN Lesson 04 — Codex Remediation Report v1.0
+
+- Repository: `clusterceu-crypto/UCAN-Lesson04`
+- Branch: `develop`
+- Starting SHA: `ab857d15bd724569771888916070e3fcff031dae`
+- Candidate overlay: already present before this pass; it was not repeated.
+
+During final verification, `develop` was observed at `2999fafe7b22332fa0506e5c176db20b0ce249ac`, which contains the candidate overlay. This advance was external to this remediation pass; Codex performed no Git write operation.
+
+## Files changed in this remediation pass
+
+- `index.html`
+- `js/lesson04.js`
+- `tests/static/lesson04-static-checks.ps1`
+- This report
+
+The existing candidate files `css/style.css`, modular CSS, shared runtime, candidate manifest, supporting documents, and assets were not changed by this pass. `js/script.js` remains absent and is not linked.
+
+## Remediation completed
+
+- P08 has exactly two approved actions: `L04-AI-P01` and `L04-AI-P02`, with the approved learner-facing labels. Each action passes its own registry ID to the shared preview/copy/open workflow.
+- P09 has one approved action only: `L04-AI-P03`, with the approved learner-facing label. The generic selector, `help`, `review`, and their builder branches are removed.
+- `buildAiPrompt()` now reads only from `window.UCAN_L04_APPROVED_PROMPTS` and safely substitutes supplied Portfolio values into the canonical template. No payload is duplicated outside `js/lesson04-config.js`.
+- The existing completion gate is combined: P11 requires both `assessmentPassed` and `isPortfolioComplete()`. Completeness checks all 13 Portfolio fields after `trim()`. Portfolio saves and clears refresh the navigation state, so clearing a field after a passed assessment immediately re-locks P11 and refilling it re-enables the gate while the passed assessment remains stored.
+
+## Static verification
+
+Commands run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tests/static/lesson04-static-checks.ps1
+git diff --check
+```
+
+Result: `STATIC_CHECKS_PASS`; `git diff --check` produced no whitespace errors.
+
+The static suite confirms 11 pages, page roles, 13 Portfolio fields, answer key `B,C,B,C,A,C`, namespace `ucan_l04_v1`, no duplicate IDs, static DOM-reference coverage, P08 P01/P02-only wiring, P09 P03-only wiring, absence of generic modes and obsolete selector, combined gate/trim behavior, exact SHA-256 checks for the three canonical payload strings, absent/unlinked legacy `js/script.js`, and unchanged `assets/` status.
+
+## Source-level regression findings
+
+- AI actions invoke only their supplied approved registry ID; no generic fallback or builder branch remains.
+- P09 retains the six-field context preview and copy-context action.
+- Empty prompts are rejected before copy; shared preview/copy/open controls remain connected to approved prompts.
+- The completion gate handles incomplete/failed, complete/failed, incomplete/passed, and complete/passed states through `assessmentPassed && isPortfolioComplete()`; whitespace-only values are incomplete.
+- Reload uses persisted assessment and Portfolio data, and a restored P11 is guarded by the same combined check. Reset progress continues to preserve Portfolio data; delete Portfolio continues to remove only Portfolio data.
+
+## Browser-dependent checks still required
+
+Interactive browser smoke verification remains required for navigation/progress, reload persistence, P08 and P09 preview/copy/open flows, clipboard/external-link behavior, focus return from the dialog, PDF generation, reset/delete behavior, responsive/mobile layout, print rules, and console errors.
+
+## Git operations
+
+No commit, push, merge, rebase, reset, tag, release, branch switch, or deployment was performed.
+
+Status: 🟢 Approved Technical Candidate — Remediation Applied  
+Browser status: 🟡 Browser Verification Required
