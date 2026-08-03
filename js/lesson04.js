@@ -389,7 +389,9 @@
     });
 
     const status = document.getElementById('assessment-status');
-    if (assessmentPassed) status.textContent = 'Усі шість відповідей правильні. Сторінка завершення відкрита.';
+    status.textContent = assessmentPassed && isPortfolioComplete()
+      ? 'Усі шість відповідей правильні. Сторінка завершення відкрита.'
+      : '';
     updateNavigation();
   }
 

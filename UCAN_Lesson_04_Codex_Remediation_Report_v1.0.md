@@ -80,3 +80,14 @@ Browser checks remain required for the changed contents control, responsive beha
 Static verification passed: the updated static suite, `node --check js/lesson04.js`, `node --check js/ucan-compat-runtime.js`, and `git diff --check`. The suite also reconfirmed 10 pages, P01–P03 only in P08, exact payload hashes, answer key, namespace, combined gate, reset/delete separation, links, and unchanged assets.
 
 Targeted Chromium scenarios could not run: the in-app browser runtime failed before tab creation with `failed to write kernel assets: The system cannot find the path specified. (os error 3)`. This is the sole remaining verification blocker; it is not a source-code defect finding. No Git operation was performed.
+
+## Completion Recovery Message Conflict Hotfix
+
+- Baseline HEAD: `bd59540c933528c72d92305e9f1b2e0f704fb74e` on `develop`.
+- Root cause: restored `renderAssessment()` wrote “Усі шість відповідей правильні. Сторінка завершення відкрита.” from `assessmentPassed` alone, even when the combined gate remained locked because the Portfolio was incomplete.
+- Code change: the restored assessment status now writes the completion-open success text only when `assessmentPassed && isPortfolioComplete()`; otherwise it is empty. The existing centralized completion recovery message remains the sole learner-facing lock message with assessment-first, then Portfolio-incomplete priority.
+- Files changed: `js/lesson04.js`, `tests/static/lesson04-static-checks.ps1`, and this report.
+- Static verification: `node --check js/lesson04.js`, the complete static suite, and `git diff --check` passed. The suite adds an explicit regression assertion that restored assessment success cannot claim completion while the Portfolio is incomplete.
+- Assets unchanged; prompt payload hashes, namespace, answer key, 13-field contract, and combined gate remain unchanged.
+- Scenario D browser verification could not start because the in-app browser runtime again failed before tab creation with `failed to write kernel assets: The system cannot find the path specified. (os error 3)`.
+- Git operations: none performed.
