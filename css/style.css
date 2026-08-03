@@ -17,7 +17,8 @@
   --danger-bg: #fff1f1;
   --shadow: 0 12px 36px rgba(18, 63, 104, 0.10);
   --radius: 16px;
-  --content: 980px;
+  --content: 1240px;
+  --reading: 78ch;
   --focus: 3px solid #168fa1;
 }
 

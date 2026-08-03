@@ -1,0 +1,2 @@
+/* Lesson 04 ownership layer. Reading measure remains bounded within the 1240px shell. */
+.lesson-page > p, .lesson-page > ul, .lesson-page > ol, .lesson-page > dl { max-width:var(--ucan-reading); }

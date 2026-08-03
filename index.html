@@ -10,7 +10,12 @@
 <meta content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" http-equiv="Content-Security-Policy"/>
 <title>Заняття 04 — Глобальні тренди та уроки кліматично розумного урбанізму</title>
 <link href="css/style.css" rel="stylesheet"/>
-<script defer="" src="js/script.js"></script>
+<link href="css/tokens.css" rel="stylesheet"/>
+<link href="css/ucan-components.css" rel="stylesheet"/>
+<link href="css/lesson04.css" rel="stylesheet"/>
+<script defer="" src="js/lesson04-config.js"></script>
+<script defer="" src="js/lesson04.js"></script>
+<script defer="" src="js/ucan-compat-runtime.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#lesson-main">Перейти до основного змісту</a>
@@ -29,6 +34,7 @@
 <span class="progress-text" id="progress-text"></span>
 </div>
 <div aria-live="polite" class="status-region" id="global-status" role="status"></div>
+<nav aria-label="Розділи заняття" class="section-navigation" id="section-navigation"></nav>
 <main class="lesson-main" id="lesson-main" tabindex="-1">
 <section aria-labelledby="p01-title" class="lesson-page opening-page" data-page-role="opening">
 <div class="eyebrow"><span aria-hidden="true">🧭</span> Орієнтація</div>
@@ -476,6 +482,7 @@
 </div>
 <span class="visually-hidden" id="portfolio-download-note">Створює PDF локально у браузері без передавання даних на сервер.</span><p aria-live="polite" class="form-status" id="portfolio-status" role="status"></p>
 </form>
+<section class="ai-support" aria-label="AI-підтримка"><button class="button button-secondary" data-approved-prompt="L04-AI-P01" type="button">Перевірити межу між фактом та інтерпретацією.</button><button class="button button-secondary" data-approved-prompt="L04-AI-P02" type="button">Сформувати уточнювальні запитання щодо умов адаптації.</button></section>
 <section aria-labelledby="portfolio-summary-title" class="portfolio-summary" hidden="" id="portfolio-summary">
 <h2 id="portfolio-summary-title">Карта адаптації міжнародного кліматичного досвіду для громади</h2><p class="portfolio-label">Портфель мера</p>
 <p class="summary-note" id="portfolio-completion-note"></p>
@@ -488,19 +495,14 @@
 <h1 id="p09-title">AI-підтримка та контекст для наступного заняття</h1>
 <p>AI-підтримка може допомогти доопрацювати Карту адаптації. Цей етап необов’язковий: Ви можете перейти далі без використання AI.</p>
 <form class="ai-support" id="ai-support-form" novalidate="">
-<fieldset>
-<legend>Оберіть, яка підтримка Вам потрібна</legend>
-<label class="choice-card"><input checked="" name="ai-mode" type="radio" value="help"/> <span>🛠️ Допомогти виконати</span></label>
-<label class="choice-card"><input name="ai-mode" type="radio" value="review"/> <span>🔍 Перевірити результат</span></label>
-</fieldset>
 <div class="button-row">
-<button class="button button-primary" id="preview-ai-prompt" type="submit"><span aria-hidden="true">👁️</span> <span class="button-label">Переглянути запит</span></button>
+<button class="button button-primary" id="preview-ai-prompt" type="submit"><span aria-hidden="true">👁️</span> <span class="button-label">Підготувати контекст для Lesson 05</span></button>
 <button class="button button-secondary" disabled="" id="copy-ai-prompt" type="button"><span aria-hidden="true">📋</span> <span class="button-label">Скопіювати запит</span></button>
 </div>
 </form>
 <section aria-labelledby="prompt-title" class="prompt-panel">
 <h2 id="prompt-title"><span aria-hidden="true">👁️</span> Попередній перегляд запиту</h2>
-<pre id="ai-prompt-preview" tabindex="0">Заповніть Карту адаптації та оберіть режим підтримки.</pre>
+<pre id="ai-prompt-preview" tabindex="0">Заповніть Карту адаптації, щоб підготувати затверджений запит.</pre>
 <p aria-live="polite" class="form-status" id="ai-status" role="status"></p>
 <p class="privacy-note">Ваші дані залишаються у цьому браузері, доки Ви самі не скопіюєте їх або не вставите до зовнішнього сервісу. Не вводьте персональні чи конфіденційні дані. Перевіряйте відповіді AI: вони не замінюють відповідальне рішення та професійний розгляд команди громади.</p><div class="button-row ai-external-actions"><a aria-disabled="true" class="button button-external" href="https://chatgpt.com/" id="open-chatgpt" rel="noopener noreferrer" tabindex="-1" target="_blank"><span aria-hidden="true">🤖</span> <span class="button-label">Відкрити ChatGPT ↗</span></a><a aria-disabled="true" class="button button-external" href="https://gemini.google.com/app" id="open-gemini" rel="noopener noreferrer" tabindex="-1" target="_blank"><span aria-hidden="true">✨</span> <span class="button-label">Відкрити Gemini ↗</span></a></div>
 </section>

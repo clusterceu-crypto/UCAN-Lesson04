@@ -139,6 +139,7 @@
   let visited = new Set([0]);
   let assessmentPassed = false;
   let promptReady = false;
+  let lastPromptTrigger = null;
 
   function announce(message, isError = false) {
     globalStatus.textContent = message || '';
@@ -182,11 +183,18 @@
     return pages[index]?.dataset.pageRole === 'assessment';
   }
 
+  function isPortfolioComplete() {
+    return portfolioFields.every(([key]) => {
+      const field = document.getElementById(key);
+      return typeof field?.value === 'string' && Boolean(field.value.trim());
+    });
+  }
+
   function showPage(index, { focus = true } = {}) {
     if (index < 0 || index >= pages.length) return;
-    if (isCompletionPage(index) && !assessmentPassed) {
+    if (isCompletionPage(index) && !(assessmentPassed && isPortfolioComplete())) {
       index = pages.findIndex(page => page.dataset.pageRole === 'assessment');
-      announce('Сторінка завершення відкриється після правильної відповіді на всі шість питань.', true);
+      announce(assessmentPassed ? 'Заповніть усі поля Карти адаптації, щоб відкрити сторінку завершення.' : 'Сторінка завершення відкриється після правильної відповіді на всі шість питань.', true);
     } else {
       announce('');
     }
@@ -223,7 +231,7 @@
     prevButton.setAttribute('aria-disabled', String(prevButton.disabled));
 
     const lastPage = currentPage === total - 1;
-    const blockedByTest = CONFIG.assessmentGate && isAssessmentPage(currentPage) && !assessmentPassed;
+    const blockedByTest = CONFIG.assessmentGate && isAssessmentPage(currentPage) && !(assessmentPassed && isPortfolioComplete());
     nextButton.disabled = lastPage || blockedByTest;
     nextButton.setAttribute('aria-disabled', String(nextButton.disabled));
     if (blockedByTest) {
@@ -401,8 +409,10 @@
     assessmentPassed = correctCount === assessmentData.length;
     storageSet(keys.assessment, { answers, checked: true, passed: assessmentPassed });
     const status = document.getElementById('assessment-status');
-    status.textContent = assessmentPassed
+    status.textContent = assessmentPassed && isPortfolioComplete()
       ? 'Усі шість відповідей правильні. Сторінка завершення відкрита.'
+      : assessmentPassed
+      ? 'Усі шість відповідей правильні. Заповніть усі поля Карти адаптації, щоб відкрити сторінку завершення.'
       : `Правильних відповідей: ${correctCount} з ${assessmentData.length}. Перегляньте зворотний зв’язок і спробуйте ще раз.`;
     updateNavigation();
     status.focus?.();
@@ -429,6 +439,7 @@
     const data = getPortfolioData();
     storageSet(keys.portfolio, data);
     updateContextPreview(data);
+    updateNavigation();
   }
 
   function restorePortfolio() {
@@ -513,6 +524,7 @@
     document.getElementById('portfolio-summary').hidden = true;
     document.getElementById('portfolio-status').textContent = 'Поля Карти адаптації очищено.';
     updateContextPreview({});
+    updateNavigation();
   }
 
   function sanitizeFilename(value) {
@@ -762,34 +774,13 @@
     if (preview) preview.textContent = buildNextContext(data);
   }
 
-  function buildAiPrompt(mode, data) {
-    const context = portfolioFields
-      .map(([key, label]) => `${label}: ${data[key] || '—'}`)
-      .join('\n');
-
-    const modeInstructions = {
-      help: 'Допомагайте виконувати завдання поетапно. Спочатку визначте перше незаповнене або нечітке поле, коротко поясніть його простими словами і поставте одне навідне запитання. Не заповнюйте всю Карту одразу, не додавайте готових місцевих фактів і не видавайте припущення за доказ.',
-      review: 'Перевірте готовий результат за критеріями заняття. Для кожного критерію використайте статус «готово» або «потребує уточнення»: підтверджений факт, відокремлення припущень, переносний принцип, місцеві умови, реалістичний перший крок, ризик, партнер і ознаки доцільності. Пояснюйте простими словами, назвіть сильні сторони та запропонуйте не більше трьох точкових покращень.'
-    };
-
-    return [
-      'Працюйте лише з контекстом, який надав користувач. Не вигадуйте джерела, місцеві факти, бюджети, строки, показники ефективності або гарантії придатності.',
-      modeInstructions[mode] || modeInstructions.help,
-      '',
-      'Контекст користувача:',
-      context,
-      '',
-      'Вимоги до відповіді:',
-      '1. Пишіть простою українською мовою без зайвого професійного жаргону.',
-      '2. Чітко відділяйте те, що надав користувач, від Ваших порад та умовних прикладів.',
-      '3. Не приймайте рішення замість користувача і не створюйте фальшивої впевненості.',
-      '4. Допоможіть користувачу зрозуміти матеріал і самостійно покращити роботу.'
-    ].join('\n');
-  }
-
-  function currentAiPrompt() {
-    const selected = document.querySelector('input[name="ai-mode"]:checked');
-    return buildAiPrompt(selected?.value || 'help', getPortfolioData());
+  function buildAiPrompt(promptId, data) {
+    const template = window.UCAN_L04_APPROVED_PROMPTS?.[promptId];
+    if (typeof template !== 'string') return '';
+    return template.replace(/\{\{([a-z_]+)\}\}/g, (_, field) => {
+      const value = data[field];
+      return typeof value === 'string' && value.trim() ? value.trim() : '—';
+    });
   }
 
   function setPromptReady(ready) {
@@ -814,13 +805,22 @@
     document.getElementById('ai-prompt-dialog-content').focus();
   }
 
-  function handleAiPrompt(event) {
-    event.preventDefault();
-    const prompt = currentAiPrompt();
+  function prepareAiPrompt(promptId, trigger) {
+    const prompt = buildAiPrompt(promptId, getPortfolioData());
+    if (!prompt) {
+      document.getElementById('ai-status').textContent = 'Затверджений запит недоступний.';
+      return;
+    }
+    lastPromptTrigger = trigger || null;
     document.getElementById('ai-prompt-preview').textContent = prompt;
     document.getElementById('ai-status').textContent = 'Запит підготовлено. Перевірте його перед копіюванням або відкриттям зовнішнього сервісу.';
     setPromptReady(true);
     openPromptDialog(prompt);
+  }
+
+  function handleAiPrompt(event) {
+    event.preventDefault();
+    prepareAiPrompt('L04-AI-P03', event.currentTarget.querySelector('#preview-ai-prompt'));
   }
 
   async function copyText(text, statusElement, successMessage) {
@@ -878,7 +878,7 @@
     renderSelfCheck();
     renderAssessment();
     setPromptReady(false);
-    document.getElementById('ai-prompt-preview').textContent = 'Заповніть Карту адаптації та оберіть режим підтримки.';
+    document.getElementById('ai-prompt-preview').textContent = 'Заповніть Карту адаптації, щоб підготувати затверджений запит.';
     showPage(0);
     announce('Навчальний прогрес очищено. Карта адаптації збережена.');
   }
@@ -934,10 +934,9 @@
     document.getElementById('download-portfolio').addEventListener('click', downloadPortfolioPdf);
     document.getElementById('ai-support-form').addEventListener('submit', handleAiPrompt);
 
-    document.querySelectorAll('input[name="ai-mode"]').forEach(input => {
-      input.addEventListener('change', () => {
-        setPromptReady(false);
-        document.getElementById('ai-status').textContent = 'Режим змінено. Перегляньте оновлений запит перед копіюванням.';
+    document.querySelectorAll('[data-approved-prompt]').forEach(button => {
+      button.addEventListener('click', () => {
+        prepareAiPrompt(button.dataset.approvedPrompt, button);
       });
     });
 
@@ -961,7 +960,7 @@
       else dialog.removeAttribute('open');
     });
     document.getElementById('ai-prompt-dialog').addEventListener('close', () => {
-      document.getElementById('preview-ai-prompt').focus();
+      (lastPromptTrigger || document.getElementById('preview-ai-prompt')).focus();
     });
 
     ['open-chatgpt', 'open-gemini'].forEach(id => {

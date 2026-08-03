@@ -1,0 +1,126 @@
+﻿{
+    "package":  "UCAN Lesson 04 Technical Remediation Candidate v1.0",
+    "base":  "ab857d15bd724569771888916070e3fcff031dae",
+    "files":  [
+                  {
+                      "path":  "assets/L04-A01_International_to_Local_First_Step_v1.0.png",
+                      "sha256":  "fbb2f6cb93bc1eda497166cac9d5451501f7b3a4fce22c8973fbcc3454b859e5",
+                      "bytes":  52123
+                  },
+                  {
+                      "path":  "assets/L04-A02_EU_Cities_Mission_System_v1.0.png",
+                      "sha256":  "868def6870058b812416111bc9f9df6065ce053a0103217fac43c34604dfed2b",
+                      "bytes":  1785209
+                  },
+                  {
+                      "path":  "assets/L04-A03_Copy_or_Adapt_v1.0.png",
+                      "sha256":  "8b9f1278e707ef5c7d31b83d7188829874aec560dbbcad16bcc4efeab22c6555",
+                      "bytes":  916991
+                  },
+                  {
+                      "path":  "Content_Enrichment_Change_Log.md",
+                      "sha256":  "a5c0a6fdfacc286309418e0eb5a912303b15f9c6fc9ae20b22dd689fac77eaea",
+                      "bytes":  1195
+                  },
+                  {
+                      "path":  "Content_Evidence_Change_Log.md",
+                      "sha256":  "a85b195dccf54ff5bd806dd37788e659bd2aae74f6ba2577cb1c362509b4f948",
+                      "bytes":  1142
+                  },
+                  {
+                      "path":  "css/lesson04.css",
+                      "sha256":  "18ff450679f13002974a1d6e9206db4ad3ea36e85754830c343bdcd01e12ccc9",
+                      "bytes":  199
+                  },
+                  {
+                      "path":  "css/style.css",
+                      "sha256":  "5baaa0b2b212cf3715a059240de731113170c472d26b73b69fc28725a33bfcd6",
+                      "bytes":  23335
+                  },
+                  {
+                      "path":  "css/tokens.css",
+                      "sha256":  "0aba4fdee5151fdf0728454131041b3686ce8943dc0b90d340b4dc09f524f787",
+                      "bytes":  140
+                  },
+                  {
+                      "path":  "css/ucan-components.css",
+                      "sha256":  "ccf47ac9e8c56ccf6d6bb3d374f96b9b96be628309a999b20a4471d09cfba855",
+                      "bytes":  1297
+                  },
+                  {
+                      "path":  "docs/UCAN_Lesson_04_Known_Issues_v1.0.md",
+                      "sha256":  "2db0ee7c203e78e5c6aad45ec268a09948a63afe717cd514b7b448a077f16803",
+                      "bytes":  254
+                  },
+                  {
+                      "path":  "docs/UCAN_Lesson_04_Override_Register_v1.0.md",
+                      "sha256":  "21ecce8d656905a6996910a2c742a7703e969d6719088eb47c73c68dd83c36d4",
+                      "bytes":  310
+                  },
+                  {
+                      "path":  "docs/UCAN_Lesson_04_Technical_Remediation_Report_v1.0.md",
+                      "sha256":  "86b4373ede6f2f2f84dec3aa3fbe88d49fe8b56c9f8db65dbf984b86805fda2f",
+                      "bytes":  602
+                  },
+                  {
+                      "path":  "index.html",
+                      "sha256":  "0ecfb272721ff5d78dc6e66a10a3a107b27b13dcdcf54e82ad6d54f81c6ee905",
+                      "bytes":  65794
+                  },
+                  {
+                      "path":  "js/lesson04.js",
+                      "sha256":  "62245afee13a7d3d0739c36dc5bfa9e867aedb412067234344da78c0c0d842e0",
+                      "bytes":  48085
+                  },
+                  {
+                      "path":  "js/lesson04-config.js",
+                      "sha256":  "2f75b6a1277632bfc937b82b45cdbd5ffe4733926b444712c08305c0ecd11238",
+                      "bytes":  272
+                  },
+                  {
+                      "path":  "js/ucan-compat-runtime.js",
+                      "sha256":  "65beb0f853001f69a5c940b684daa29c47f72faa3731979ed9f822f806e1fa7b",
+                      "bytes":  2056
+                  },
+                  {
+                      "path":  "Learning_Clarity_Change_Log.md",
+                      "sha256":  "408a44012c9a61747cad06298a1eb9db3336a03cb09769e8e2af7e63af458947",
+                      "bytes":  539
+                  },
+                  {
+                      "path":  "README.md",
+                      "sha256":  "5950ca9bb37cc9f41c96ac71ebec8e21d544f829d79a85e96c56fa2e805b4758",
+                      "bytes":  4595
+                  },
+                  {
+                      "path":  "tests/README.md",
+                      "sha256":  "1ac4e8933fbb8f473a7ae52c037765801455f4cf83cda69a04c8009ab825ab6f",
+                      "bytes":  185
+                  },
+                  {
+                      "path":  "tests/static/lesson04-static-checks.ps1",
+                      "sha256":  "fb4da1f1169c657f280ca8c6e184270c6a1d3adeb030187fe69e3388b78e08f1",
+                      "bytes":  1881
+                  },
+                  {
+                      "path":  "UCAN_Lesson_04_Browser_QA_Report_v1.0.md",
+                      "sha256":  "94c49cac86246c3df443acd4912aa2ede775ea720ac2e02bd120be54382b3ca0",
+                      "bytes":  417
+                  },
+                  {
+                      "path":  "UCAN_Lesson_04_Content_Preservation_Report_v1.0.md",
+                      "sha256":  "019545d24c0ae05b65b97bc81f0bb5e93943deb3471bd5c5d3b8fdc10ab1c604",
+                      "bytes":  716
+                  },
+                  {
+                      "path":  "UCAN_Lesson_04_Static_QA_Report_v1.0.md",
+                      "sha256":  "a9709a8c3180dbf5b9377aa80928618b7d7ecb87d47ed4f3acad84a6ced83569",
+                      "bytes":  286
+                  },
+                  {
+                      "path":  "UCAN_Lesson_04_Technical_Change_Log_v1.0.md",
+                      "sha256":  "c9e12d530102d817eb1113d9487d9774ca08c4addb7bd9cd92af117f3af0104d",
+                      "bytes":  449
+                  }
+              ]
+}
