@@ -54,3 +54,15 @@ No commit, push, merge, rebase, reset, tag, release, branch switch, or deploymen
 
 Status: 🟢 Approved Technical Candidate — Remediation Applied  
 Browser status: 🟡 Browser Verification Required
+
+## Course UX Harmonization Decision
+
+Lessons 02–03 were used only as learner-facing UX references for the header/progress pattern, simple lesson contents control, button hierarchy, practical workspace placement, completion links, and responsive component treatment. No lesson-specific content was copied.
+
+- The learner-facing structure is now 10 pages: the former separate AI handover page is removed.
+- P08 remains the practical-work owner and now contains the three approved actions `L04-AI-P01`, `L04-AI-P02`, and `L04-AI-P03`, alongside the 13-field Portfolio, shared prompt preview/copy/external-open controls, and six-field context generation.
+- Navigation is unified around a single “Зміст заняття” control, a current-page indication, `Сторінка X з 10`, percentage progress, and `← Назад` / `Далі →` controls. Learner-facing visited/completed indicators are removed.
+- The canonical prompt registry, lesson content, Portfolio contract, storage namespace, answer key, assets, and combined completion gate are preserved.
+- The completion page uses `← До Заняття 03` and `Перейти до Заняття 05 →`; reaching it remains conditional on the combined gate.
+
+Browser checks remain required for the changed contents control, responsive behavior, prompt workflow, focus behavior, and completion links.

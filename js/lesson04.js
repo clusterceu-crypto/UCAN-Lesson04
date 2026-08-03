@@ -250,7 +250,7 @@
     const percent = Math.round((visited.size / pages.length) * 100);
     progressFill.style.width = `${percent}%`;
     progressBar.setAttribute('aria-valuenow', String(percent));
-    progressText.textContent = `Відвідано ${visited.size} з ${pages.length}`;
+    progressText.textContent = `${percent}%`;
   }
 
   function renderSelfCheck() {
@@ -821,11 +821,6 @@
     openPromptDialog(prompt);
   }
 
-  function handleAiPrompt(event) {
-    event.preventDefault();
-    prepareAiPrompt('L04-AI-P03', event.currentTarget.querySelector('#preview-ai-prompt'));
-  }
-
   async function copyText(text, statusElement, successMessage) {
     if (!text || !text.trim()) {
       statusElement.textContent = 'Немає тексту для копіювання.';
@@ -935,8 +930,6 @@
     document.getElementById('portfolio-form').addEventListener('submit', handlePortfolioSubmit);
     document.getElementById('clear-portfolio').addEventListener('click', clearPortfolio);
     document.getElementById('download-portfolio').addEventListener('click', downloadPortfolioPdf);
-    document.getElementById('ai-support-form').addEventListener('submit', handleAiPrompt);
-
     document.querySelectorAll('[data-approved-prompt]').forEach(button => {
       button.addEventListener('click', () => {
         prepareAiPrompt(button.dataset.approvedPrompt, button);
@@ -1006,7 +999,7 @@
     const savedAssessment = storageGet(keys.assessment, { passed: false });
     assessmentPassed = Boolean(savedAssessment.passed);
     const savedVisited = storageGet(keys.visited, [0]);
-    visited = new Set(Array.isArray(savedVisited) ? savedVisited.filter(Number.isInteger) : [0]);
+    visited = new Set(Array.isArray(savedVisited) ? savedVisited.filter(index => Number.isInteger(index) && index >= 0 && index < pages.length) : [0]);
     if (visited.size === 0) visited.add(0);
 
     renderSelfCheck();

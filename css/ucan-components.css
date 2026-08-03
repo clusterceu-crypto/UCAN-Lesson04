@@ -1,11 +1,10 @@
 /* Bounded component layer; not a cross-lesson canonical runtime. */
 .site-header, .progress-shell, .section-navigation, .status-region, .lesson-main, .site-footer { max-width: none; }
-.section-navigation { display:flex; gap:.45rem; overflow-x:auto; overscroll-behavior-x:contain; padding:.5rem max(1rem,calc((100vw - var(--ucan-shell))/2)); background:var(--white); border-bottom:1px solid var(--grey-200); scrollbar-width:thin; }
-.section-navigation button { flex:0 0 auto; min-width:var(--ucan-touch); min-height:var(--ucan-touch); border:1px solid var(--grey-300); border-radius:999px; background:var(--white); color:var(--blue-900); font-weight:700; cursor:pointer; }
-.section-navigation button[data-state~="visited"]::after { content:" ✓"; }
-.section-navigation button[data-state~="completed"]::after { content:" •"; }
-.section-navigation button[data-state~="locked"] { border-style:dashed; opacity:.72; }
-.section-navigation button[aria-current="page"] { background:var(--blue-900); color:var(--white); border-color:var(--blue-900); }
+.section-navigation { padding:.5rem max(1rem,calc((100vw - var(--ucan-shell))/2)); background:var(--white); border-bottom:1px solid var(--grey-200); }
+.contents-toggle { min-height:var(--ucan-touch); border:1px solid var(--grey-300); border-radius:8px; background:var(--white); color:var(--blue-900); font-weight:700; cursor:pointer; padding:.55rem .8rem; }
+.contents-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); gap:.35rem; max-width:var(--ucan-shell); margin:.5rem auto 0; }
+.contents-list button { min-height:var(--ucan-touch); border:1px solid var(--grey-300); border-radius:8px; background:var(--white); color:var(--blue-900); font-weight:600; cursor:pointer; padding:.55rem .7rem; text-align:left; }
+.contents-list button[aria-current="page"] { background:var(--blue-900); color:var(--white); border-color:var(--blue-900); }
 .section-navigation button:focus-visible { outline:var(--focus); outline-offset:3px; }
-@media (max-width:680px) { .section-navigation { padding-inline:.5rem; } }
+@media (max-width:680px) { .section-navigation { padding-inline:.5rem; } .contents-list { grid-template-columns:1fr; } }
 @media (prefers-reduced-motion:reduce) { .section-navigation { scroll-behavior:auto; } }

@@ -34,7 +34,7 @@
 <span class="progress-text" id="progress-text"></span>
 </div>
 <div aria-live="polite" class="status-region" id="global-status" role="status"></div>
-<nav aria-label="Розділи заняття" class="section-navigation" id="section-navigation"></nav>
+<nav aria-label="Зміст заняття" class="section-navigation" id="section-navigation"></nav>
 <main class="lesson-main" id="lesson-main" tabindex="-1">
 <section aria-labelledby="p01-title" class="lesson-page opening-page" data-page-role="opening">
 <div class="eyebrow"><span aria-hidden="true">🧭</span> Орієнтація</div>
@@ -482,24 +482,11 @@
 </div>
 <span class="visually-hidden" id="portfolio-download-note">Створює PDF локально у браузері без передавання даних на сервер.</span><p aria-live="polite" class="form-status" id="portfolio-status" role="status"></p>
 </form>
-<section class="ai-support" aria-label="AI-підтримка"><button class="button button-secondary" data-approved-prompt="L04-AI-P01" type="button">Перевірити межу між фактом та інтерпретацією.</button><button class="button button-secondary" data-approved-prompt="L04-AI-P02" type="button">Сформувати уточнювальні запитання щодо умов адаптації.</button></section>
-<section aria-labelledby="portfolio-summary-title" class="portfolio-summary" hidden="" id="portfolio-summary">
-<h2 id="portfolio-summary-title">Карта адаптації міжнародного кліматичного досвіду для громади</h2><p class="portfolio-label">Портфель мера</p>
-<p class="summary-note" id="portfolio-completion-note"></p>
-<dl id="portfolio-summary-list"></dl>
-<p class="ai-note">Цей PDF можна за Вашим рішенням передати AI-помічнику для аналізу, уточнення або вдосконалення запропонованого рішення. Не додавайте персональні чи конфіденційні дані.</p>
+<section class="ai-support" aria-label="AI-підтримка">
+<p>AI не створює Карту замість Вас. Він допомагає перевірити вже підготовлений матеріал.</p>
+<div class="button-row"><button class="button button-secondary" data-approved-prompt="L04-AI-P01" type="button">Перевірити факти та інтерпретації</button><button class="button button-secondary" data-approved-prompt="L04-AI-P02" type="button">Сформувати уточнювальні запитання</button><button class="button button-primary" data-approved-prompt="L04-AI-P03" id="preview-ai-prompt" type="button">Підготувати контекст для Заняття 05</button></div>
+<div class="button-row"><button class="button button-secondary" disabled="" id="copy-ai-prompt" type="button"><span aria-hidden="true">📋</span> <span class="button-label">Скопіювати запит</span></button></div>
 </section>
-</section>
-<section aria-labelledby="p09-title" class="lesson-page" data-page-role="support" hidden="">
-<div class="eyebrow"><span aria-hidden="true">🤖</span> Необов’язково · AI-підтримка</div>
-<h1 id="p09-title">AI-підтримка та контекст для наступного заняття</h1>
-<p>AI-підтримка може допомогти доопрацювати Карту адаптації. Цей етап необов’язковий: Ви можете перейти далі без використання AI.</p>
-<form class="ai-support" id="ai-support-form" novalidate="">
-<div class="button-row">
-<button class="button button-primary" id="preview-ai-prompt" type="submit"><span aria-hidden="true">👁️</span> <span class="button-label">Підготувати контекст для Lesson 05</span></button>
-<button class="button button-secondary" disabled="" id="copy-ai-prompt" type="button"><span aria-hidden="true">📋</span> <span class="button-label">Скопіювати запит</span></button>
-</div>
-</form>
 <section aria-labelledby="prompt-title" class="prompt-panel">
 <h2 id="prompt-title"><span aria-hidden="true">👁️</span> Попередній перегляд запиту</h2>
 <pre id="ai-prompt-preview" tabindex="0">Заповніть Карту адаптації, щоб підготувати затверджений запит.</pre>
@@ -512,6 +499,12 @@
 <pre id="next-context-preview" tabindex="0">Заповніть відповідні поля Карти адаптації.</pre>
 <button class="button button-primary" id="copy-next-context" type="button"><span aria-hidden="true">📋</span> <span class="button-label">Скопіювати контекст для наступного заняття</span></button>
 <p aria-live="polite" class="form-status" id="context-status" role="status"></p>
+</section>
+<section aria-labelledby="portfolio-summary-title" class="portfolio-summary" hidden="" id="portfolio-summary">
+<h2 id="portfolio-summary-title">Карта адаптації міжнародного кліматичного досвіду для громади</h2><p class="portfolio-label">Портфель мера</p>
+<p class="summary-note" id="portfolio-completion-note"></p>
+<dl id="portfolio-summary-list"></dl>
+<p class="ai-note">Цей PDF можна за Вашим рішенням передати AI-помічнику для аналізу, уточнення або вдосконалення запропонованого рішення. Не додавайте персональні чи конфіденційні дані.</p>
 </section>
 </section>
 <section aria-labelledby="p10-title" class="lesson-page" data-page-role="assessment" hidden="">
@@ -546,6 +539,7 @@
 <aside class="callout callout-green">
 <h2>Дякуємо за виконання завдань заняття</h2>
 <p>Вашу Карту адаптації збережено локально у цьому браузері як артефакт Портфеля мера для використання у наступному занятті.</p>
+<p>Карта адаптації завершена, а підсумковий тест пройдено.</p>
 </aside>
 <section aria-labelledby="next-title" class="content-section">
 <h2 id="next-title"><span aria-hidden="true">➡️</span> Перехід до наступного заняття</h2>
@@ -555,8 +549,8 @@
 <h2 id="completion-actions-title">Продовжити навчання</h2>
 <div class="button-row">
 <button class="button button-secondary" id="return-start" type="button"><span aria-hidden="true">↩️</span> <span class="button-label">Повернутися на початок</span></button>
-<a class="button button-secondary" hidden="" href="#" id="previous-lesson-link" rel="noopener"><span aria-hidden="true">⬅️</span> <span class="button-label">Повернутися до попереднього заняття</span></a>
-<a class="button button-primary" hidden="" href="#" id="next-lesson-link" rel="noopener"><span class="button-label">Перейти до наступного заняття</span> <span aria-hidden="true">➡️</span></a>
+<a class="button button-secondary" hidden="" href="#" id="previous-lesson-link" rel="noopener"><span class="button-label">← До Заняття 03</span></a>
+<a class="button button-primary" hidden="" href="#" id="next-lesson-link" rel="noopener"><span class="button-label">Перейти до Заняття 05 →</span></a>
 </div>
 </section></section>
 </main>
@@ -571,9 +565,9 @@
 <button class="button button-primary" id="copy-ai-prompt-dialog" type="button"><span aria-hidden="true">📋</span> <span class="button-label">Скопіювати запит</span></button>
 </div>
 </div></dialog><nav aria-label="Переходи між сторінками" class="lesson-nav">
-<button class="button button-secondary" id="prev-page" type="button"><span aria-hidden="true">⬅️</span> <span class="button-label">Попередній розділ</span></button>
+<button class="button button-secondary" id="prev-page" type="button"><span class="button-label">← Назад</span></button>
 <span aria-live="polite" class="nav-page-count" id="nav-page-count"></span>
-<button class="button button-primary" id="next-page" type="button"><span class="button-label">Наступний розділ</span> <span aria-hidden="true">➡️</span></button>
+<button class="button button-primary" id="next-page" type="button"><span class="button-label">Далі →</span></button>
 </nav>
 <footer class="site-footer">
 <span>UCAN · Заняття 04</span>

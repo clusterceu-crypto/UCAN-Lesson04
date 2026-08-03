@@ -3,9 +3,10 @@ $root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $html = Get-Content -Raw (Join-Path $root 'index.html')
 $js = Get-Content -Raw (Join-Path $root 'js\lesson04.js')
 $config = Get-Content -Raw (Join-Path $root 'js\lesson04-config.js')
+$runtime = Get-Content -Raw (Join-Path $root 'js\ucan-compat-runtime.js')
 function Assert-Check($ok,$name) { if(-not $ok){throw "FAIL: $name"}; "PASS: $name" }
-Assert-Check (($html -split '<section[^>]+class="lesson-page').Count - 1 -eq 11) 'page count = 11'
-$missingRoles = @('opening','theory','application','transition','resources','self-check','practice','support','assessment','completion') | Where-Object { $html -notmatch ('data-page-role="' + $_ + '"') }
+Assert-Check (($html -split '<section[^>]+class="lesson-page').Count - 1 -eq 10) 'page count = 10'
+$missingRoles = @('opening','theory','application','transition','resources','self-check','practice','assessment','completion') | Where-Object { $html -notmatch ('data-page-role="' + $_ + '"') }
 Assert-Check ($missingRoles.Count -eq 0) 'page role set present'
 $answers = [regex]::Matches($js, "answer: '([ABCD])'") | ForEach-Object { $_.Groups[1].Value }
 Assert-Check (($js -match "storageNamespace: 'ucan_l04_v1'") -and (($answers | Select-Object -Last 6) -join ',' -eq 'B,C,B,C,A,C')) 'namespace and assessment mapping'
@@ -14,7 +15,7 @@ Assert-Check (([regex]::Matches($portfolioBlock, "\['")).Count -eq 13) 'portfoli
 Assert-Check ($html -match 'css/tokens.css' -and $html -match 'css/ucan-components.css' -and $html -match 'css/lesson04.css') 'stylesheet links'
 Assert-Check ($html -match 'js/lesson04-config.js' -and $html -match 'js/lesson04.js' -and $html -match 'js/ucan-compat-runtime.js') 'script links'
 Assert-Check ((Get-Content -Raw (Join-Path $root 'css\style.css')) -match '--content: 1240px') '1240px shell'
-Assert-Check ($html -match 'id="section-navigation"') 'section navigation host'
+Assert-Check ($html -match 'id="section-navigation"' -and $runtime -match "toggle\.textContent = 'Зміст заняття'") 'simple lesson contents control'
 Assert-Check (-not ($html -match '\son\w+\s*=')) 'no inline handlers'
 $ids = [regex]::Matches($html, '\sid="([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
 Assert-Check (($ids | Group-Object | Where-Object Count -gt 1).Count -eq 0) 'no duplicate ids'
@@ -23,11 +24,10 @@ Assert-Check (($domReferences | Where-Object { $_ -notin $ids }).Count -eq 0) 's
 Assert-Check (-not (Test-Path (Join-Path $root 'js\script.js'))) 'legacy js/script.js absent'
 Assert-Check ($html -notmatch 'js/script\.js') 'legacy js/script.js not linked'
 
-$p08 = [regex]::Match($html, '(?s)<section[^>]+data-page-role="practice".*?</section>\s*<section[^>]+data-page-role="support"').Value
-$p09 = [regex]::Match($html, '(?s)<section[^>]+data-page-role="support".*?</section>\s*<section[^>]+data-page-role="assessment"').Value
-Assert-Check (([regex]::Matches($p08, 'data-approved-prompt="L04-AI-P0[12]"')).Count -eq 2 -and $p08 -match 'data-approved-prompt="L04-AI-P01"' -and $p08 -match 'data-approved-prompt="L04-AI-P02"') 'P08 contains P01 and P02 only'
-Assert-Check ($p09 -match 'id="preview-ai-prompt"' -and $p09 -notmatch 'L04-AI-P01' -and $p09 -notmatch 'L04-AI-P02') 'P09 excludes P01 and P02'
-Assert-Check ($js -match "prepareAiPrompt\('L04-AI-P03'" -and $js -match 'button\.dataset\.approvedPrompt') 'P09 contains P03 only and P08 actions use their own registry id'
+$p08 = [regex]::Match($html, '(?s)<section[^>]+data-page-role="practice".*?</section>\s*<section[^>]+data-page-role="assessment"').Value
+Assert-Check (([regex]::Matches($p08, 'data-approved-prompt="L04-AI-P0[123]"')).Count -eq 3 -and $p08 -match 'data-approved-prompt="L04-AI-P01"' -and $p08 -match 'data-approved-prompt="L04-AI-P02"' -and $p08 -match 'data-approved-prompt="L04-AI-P03"') 'P08 contains P01, P02 and P03 only'
+Assert-Check ($html -notmatch 'data-page-role="support"' -and $html -notmatch 'p09-title') 'no separate AI page'
+Assert-Check ($js -match 'button\.dataset\.approvedPrompt') 'practical AI actions use their own registry id'
 Assert-Check ($html -notmatch 'name="ai-mode"' -and $js -notmatch 'ai-mode') 'obsolete selector absent'
 Assert-Check ($html -notmatch '(?i)\bhelp\b|\breview\b' -and $js -notmatch '(?i)\bhelp\b|\breview\b') 'generic help and review absent'
 Assert-Check ($js -match 'window\.UCAN_L04_APPROVED_PROMPTS\?\.\[promptId\]' -and $js -notmatch 'modeInstructions') 'approved registry is the only prompt builder source'
@@ -38,6 +38,8 @@ Assert-Check ($js -match 'function showPage\(index[\s\S]*?isCompletionPage\(inde
 $resetBlock = [regex]::Match($js, 'function resetLearningProgress\(\)[\s\S]*?\n  \}').Value
 Assert-Check ($resetBlock -match 'keys\.assessment' -and $resetBlock -match 'assessmentPassed\s*=\s*false' -and $resetBlock -notmatch 'keys\.portfolio') 'reset progress preserves portfolio data'
 Assert-Check ($js -match 'function clearPortfolio\(\)[\s\S]*?storageRemove\(keys\.portfolio\)') 'delete portfolio follows its existing storage contract'
+Assert-Check (([regex]::Matches($html, 'role="progressbar"')).Count -eq 1 -and $html -match '← Назад' -and $html -match 'Далі →' -and $js -match 'pageLabel\.textContent = `Сторінка \$\{pageNumber\} з \$\{total\}`' -and $js -match 'progressText\.textContent = `\$\{percent\}%`') 'single progress bar, page counter and course navigation labels'
+Assert-Check ($html -match '← До Заняття 03' -and $html -match 'Перейти до Заняття 05 →') 'previous and next lesson links'
 
 $registryMatch = [regex]::Match($config, 'window\.UCAN_L04_APPROVED_PROMPTS = Object\.freeze\((?<json>\{[\s\S]*\})\);')
 Assert-Check ($registryMatch.Success) 'approved prompt registry present'
