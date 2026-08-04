@@ -91,3 +91,36 @@ Targeted Chromium scenarios could not run: the in-app browser runtime failed bef
 - Assets unchanged; prompt payload hashes, namespace, answer key, 13-field contract, and combined gate remain unchanged.
 - Scenario D browser verification could not start because the in-app browser runtime again failed before tab creation with `failed to write kernel assets: The system cannot find the path specified. (os error 3)`.
 - Git operations: none performed.
+
+## L04-FPQA-001 — Route 1 Lesson Map Hotfix (2026-08-04)
+
+- Defect ID: `L04-FPQA-001`.
+- Root cause: the Route 1 learner-facing `Карта заняття` table retained the legacy 11-step presentation after runtime navigation had already been consolidated to 10 routes. The stale table included a standalone AI row and shifted assessment/completion numbering to 10/11.
+- Exact source change: `index.html` now presents the approved 10-entry Lesson Map in the required order; standalone AI was removed and entry 8 is exactly `Практичне завдання + AI`.
+- Files changed: `index.html`, `tests/static/lesson04-static-checks.ps1`, and this remediation report.
+- Static verification: `git diff --check` passed. The existing suite returned `STATIC_CHECKS_PASS`, including targeted assertions for exactly 10 Lesson Map entries, approved order, no standalone AI row, exact entry 8 text, 10 runtime pages, unchanged P01–P03 payload hashes, 13 Portfolio fields, namespace, assessment key, combined gate, reset/delete contracts, course links, and unchanged assets. JavaScript syntax checks were not required because all JavaScript files are unchanged; the suite verifies that invariant when shell Node is unavailable.
+- Targeted browser verification: PASS at `http://127.0.0.1:4174/`. Route 1 displayed exactly 10 visible Lesson Map rows; no standalone AI step was present; entry 8 displayed `Практичне завдання + AI`; `Сторінка 1 з 10`, 10 runtime `.lesson-page` elements, and 10 contents-navigation route buttons were confirmed; console errors/warnings: none.
+- Runtime route count remains 10.
+- Source files outside the authorized scope are unchanged. `UCAN_Lesson_04_Final_Production_QA_Report_v1.0.md` was not modified.
+- Git operations: none.
+
+Status: 🟢 Lesson 04 Route 1 Lesson Map Hotfix Completed
+Defect: 🟢 L04-FPQA-001 Closed
+Next controls: 🟡 Controlled Save Required · 🟡 Final Production Preview Repeat Required
+
+## Controlled Targeted Hotfix — L04-FPQA-001 and L04-FPQA-002 (2026-08-04)
+
+- Defect IDs: `L04-FPQA-001`, `L04-FPQA-002`.
+- L04-FPQA-001 root cause and source change: the Route 1 learner-facing `Карта заняття` retained a legacy 11-entry presentation, including a standalone AI row. `index.html` now retains only the approved ordered 10 entries; entry 8 is exactly `Практичне завдання + AI`.
+- L04-FPQA-002 root cause: the Route 8 learner experience exposed approved prompt payloads through a preview panel and modal before copying, rather than the approved direct copy workflow.
+- L04-FPQA-002 exact source change: Route 8 now displays the approved short purpose for each of P01, P02, and P03 with one `Копіювати промпт` action per payload. Each action builds its payload only from `window.UCAN_L04_APPROVED_PROMPTS`, copies it directly to the clipboard, and displays exactly: `Промпт скопійовано. Відкрийте ChatGPT або Gemini та вставте його в чат.` The learner-facing preview panel, preview modal, standalone copy action, and preview-before-copy behavior were removed. ChatGPT/Gemini links remain disabled until a successful copy and do not transmit prompt data.
+- Files changed: `index.html`, `js/lesson04.js`, `tests/static/lesson04-static-checks.ps1`, and this remediation report. `js/lesson04-config.js` was read only and is unchanged. The Final Production QA report was not modified.
+- Static verification: `git diff --check` passed. The existing static suite returned `STATIC_CHECKS_PASS`, including 10 runtime pages; the complete ordered Route 1 map; no standalone AI map row; exact entry 8; three P01–P03 copy actions; no learner-facing prompt preview workflow; exact P01–P03 payload hashes; unchanged config; 13 Portfolio fields; namespace; assessment key; and combined completion gate. Shell `node --check` is unavailable in this environment; the three JavaScript files were parsed by the available Node runtime with no `SyntaxError`.
+- Targeted browser verification: blocked before any page content loaded. The in-app browser rejected both local test endpoints (`http://127.0.0.1:4175/` and `http://127.0.0.1:4174/`) with `net::ERR_BLOCKED_BY_CLIENT`. Therefore Route 1 visible-state confirmation, P01–P03 clipboard confirmation, Route 8 persistence, assessment/gate smoke checks, and console-error confirmation could not be executed in this run.
+- Runtime route count: static verification confirms 10 learner-facing runtime pages; browser runtime confirmation is blocked as above.
+- Source files outside the authorized scope are unchanged. Git operations: none.
+
+Status: 🟡 Lesson 04 Targeted Production Hotfix Implemented
+Defects: 🟢 L04-FPQA-001 Closed · 🟢 L04-FPQA-002 Implemented (targeted browser verification pending)
+Verification: 🟡 Targeted Browser Verification Blocked — `net::ERR_BLOCKED_BY_CLIENT` on local test endpoints
+Control: 🟡 Controlled Save Not Yet Authorized

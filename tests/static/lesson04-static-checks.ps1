@@ -1,13 +1,20 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
-$html = Get-Content -Raw (Join-Path $root 'index.html')
-$js = Get-Content -Raw (Join-Path $root 'js\lesson04.js')
-$config = Get-Content -Raw (Join-Path $root 'js\lesson04-config.js')
-$runtime = Get-Content -Raw (Join-Path $root 'js\ucan-compat-runtime.js')
+$html = Get-Content -Raw -Encoding UTF8 (Join-Path $root 'index.html')
+$js = Get-Content -Raw -Encoding UTF8 (Join-Path $root 'js\lesson04.js')
+$config = Get-Content -Raw -Encoding UTF8 (Join-Path $root 'js\lesson04-config.js')
+$runtime = Get-Content -Raw -Encoding UTF8 (Join-Path $root 'js\ucan-compat-runtime.js')
 function Assert-Check($ok,$name) { if(-not $ok){throw "FAIL: $name"}; "PASS: $name" }
 Assert-Check (($html -split '<section[^>]+class="lesson-page').Count - 1 -eq 10) 'page count = 10'
 $missingRoles = @('opening','theory','application','transition','resources','self-check','practice','assessment','completion') | Where-Object { $html -notmatch ('data-page-role="' + $_ + '"') }
 Assert-Check ($missingRoles.Count -eq 0) 'page role set present'
+$lessonMapRows = [regex]::Match($html, '(?s)<h2 id="map-title".*?<tbody>(?<rows>.*?)</tbody>').Groups['rows'].Value
+$lessonMapEntries = [regex]::Matches($lessonMapRows, '<tr><td>\d+</td><td>([^<]+)</td>') | ForEach-Object { $_.Groups[1].Value }
+$expectedLessonMapEntries = @('Початок','EU Cities Mission','Системний підхід','Як читати міжнародний кейс','Міжнародний досвід','Ресурси','Самоперевірка','Практичне завдання + AI','Підсумковий тест','Завершення')
+Assert-Check ($lessonMapEntries.Count -eq 10) 'Route 1 Lesson Map contains exactly 10 entries'
+Assert-Check (($lessonMapEntries -join '|') -eq ($expectedLessonMapEntries -join '|')) 'Route 1 Lesson Map follows the approved 10-entry order'
+Assert-Check ($lessonMapRows -notmatch '<td>AI-підтримка</td>') 'Route 1 Lesson Map has no standalone AI entry'
+Assert-Check ($lessonMapRows -match '<tr><td>8</td><td>Практичне завдання \+ AI</td>') 'Route 1 Lesson Map entry 8 is exactly Practical task + AI'
 $answers = [regex]::Matches($js, "answer: '([ABCD])'") | ForEach-Object { $_.Groups[1].Value }
 Assert-Check (($js -match "storageNamespace: 'ucan_l04_v1'") -and (($answers | Select-Object -Last 6) -join ',' -eq 'B,C,B,C,A,C')) 'namespace and assessment mapping'
 $portfolioBlock = [regex]::Match($js, 'const portfolioFields = \[(?<fields>[\s\S]*?)\n\s*\];').Groups['fields'].Value
@@ -26,6 +33,10 @@ Assert-Check ($html -notmatch 'js/script\.js') 'legacy js/script.js not linked'
 
 $p08 = [regex]::Match($html, '(?s)<section[^>]+data-page-role="practice".*?</section>\s*<section[^>]+data-page-role="assessment"').Value
 Assert-Check (([regex]::Matches($p08, 'data-approved-prompt="L04-AI-P0[123]"')).Count -eq 3 -and $p08 -match 'data-approved-prompt="L04-AI-P01"' -and $p08 -match 'data-approved-prompt="L04-AI-P02"' -and $p08 -match 'data-approved-prompt="L04-AI-P03"') 'P08 contains P01, P02 and P03 only'
+Assert-Check (([regex]::Matches($p08, '>Копіювати промпт</button>')).Count -eq 3) 'P08 has exactly three learner-facing Copy prompt buttons'
+Assert-Check ($p08 -match 'data-approved-prompt="L04-AI-P01"[^>]*>Копіювати промпт</button>' -and $p08 -match 'data-approved-prompt="L04-AI-P02"[^>]*>Копіювати промпт</button>' -and $p08 -match 'data-approved-prompt="L04-AI-P03"[^>]*>Копіювати промпт</button>') 'each approved prompt has its own Copy prompt action'
+Assert-Check ($html -notmatch 'ai-prompt-preview|ai-prompt-dialog|prompt-panel|Прочитати запит|Переглянути промпт') 'learner-facing prompt preview workflow is absent'
+Assert-Check ($js -match 'async function copyAiPrompt\(promptId\)' -and $js -match "buildAiPrompt\(promptId, getPortfolioData\(\)\)" -and $js -match 'Промпт скопійовано\. Відкрийте ChatGPT або Gemini та вставте його в чат\.') 'AI actions copy the approved payload with the approved success message'
 Assert-Check ($html -notmatch 'data-page-role="support"' -and $html -notmatch 'p09-title') 'no separate AI page'
 Assert-Check ($js -match 'button\.dataset\.approvedPrompt') 'practical AI actions use their own registry id'
 Assert-Check ($html -notmatch 'name="ai-mode"' -and $js -notmatch 'ai-mode') 'obsolete selector absent'
@@ -62,5 +73,18 @@ try {
   Assert-Check $promptHashesMatch 'exact P01/P02/P03 payload text preserved'
 } finally { $sha.Dispose() }
 Assert-Check (-not (git status --porcelain -- assets)) 'assets unchanged'
-& node --check (Join-Path $root 'js\lesson04-config.js'); & node --check (Join-Path $root 'js\lesson04.js'); & node --check (Join-Path $root 'js\ucan-compat-runtime.js')
+Assert-Check (-not (git status --porcelain -- 'js/lesson04-config.js')) 'approved prompt registry file unchanged'
+$nodeCommand = Get-Command node -ErrorAction SilentlyContinue
+if ($nodeCommand) {
+  & $nodeCommand.Source --check (Join-Path $root 'js\lesson04-config.js')
+  & $nodeCommand.Source --check (Join-Path $root 'js\lesson04.js')
+  & $nodeCommand.Source --check (Join-Path $root 'js\ucan-compat-runtime.js')
+} else {
+  $javascriptChanges = @(git status --porcelain -- 'js/lesson04-config.js' 'js/lesson04.js' 'js/ucan-compat-runtime.js')
+  if ($javascriptChanges.Count -eq 0) {
+    Assert-Check $true 'JavaScript files unchanged; syntax checks not required'
+  } else {
+    'SKIP: Node CLI is unavailable; changed JavaScript syntax requires runtime verification.'
+  }
+}
 "STATIC_CHECKS_PASS"

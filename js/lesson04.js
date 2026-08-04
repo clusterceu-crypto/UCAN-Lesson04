@@ -139,7 +139,6 @@
   let visited = new Set([0]);
   let assessmentPassed = false;
   let promptReady = false;
-  let lastPromptTrigger = null;
 
   function announce(message, isError = false) {
     globalStatus.textContent = message || '';
@@ -798,8 +797,6 @@
 
   function setPromptReady(ready) {
     promptReady = Boolean(ready);
-    const copyButton = document.getElementById('copy-ai-prompt');
-    copyButton.disabled = !promptReady;
     ['open-chatgpt', 'open-gemini'].forEach(id => {
       const link = document.getElementById(id);
       link.setAttribute('aria-disabled', String(!promptReady));
@@ -807,28 +804,18 @@
     });
   }
 
-  function openPromptDialog(prompt) {
-    const dialog = document.getElementById('ai-prompt-dialog');
-    document.getElementById('ai-prompt-dialog-content').textContent = prompt;
-    if (typeof dialog.showModal === 'function') {
-      dialog.showModal();
-    } else {
-      dialog.setAttribute('open', '');
-    }
-    document.getElementById('ai-prompt-dialog-content').focus();
-  }
-
-  function prepareAiPrompt(promptId, trigger) {
+  async function copyAiPrompt(promptId) {
     const prompt = buildAiPrompt(promptId, getPortfolioData());
     if (!prompt) {
-      document.getElementById('ai-status').textContent = 'Затверджений запит недоступний.';
+      document.getElementById('ai-status').textContent = 'Затверджений промпт недоступний.';
       return;
     }
-    lastPromptTrigger = trigger || null;
-    document.getElementById('ai-prompt-preview').textContent = prompt;
-    document.getElementById('ai-status').textContent = 'Запит підготовлено. Перевірте його перед копіюванням або відкриттям зовнішнього сервісу.';
-    setPromptReady(true);
-    openPromptDialog(prompt);
+    const copied = await copyText(
+      prompt,
+      document.getElementById('ai-status'),
+      'Промпт скопійовано. Відкрийте ChatGPT або Gemini та вставте його в чат.'
+    );
+    if (copied) setPromptReady(true);
   }
 
   async function copyText(text, statusElement, successMessage) {
@@ -854,7 +841,7 @@
       statusElement.textContent = successMessage;
       return true;
     } catch (error) {
-      statusElement.textContent = 'Не вдалося скопіювати автоматично. Виділіть текст у попередньому перегляді та скопіюйте вручну.';
+      statusElement.textContent = 'Не вдалося скопіювати автоматично. Спробуйте ще раз.';
       return false;
     }
   }
@@ -886,7 +873,7 @@
     renderSelfCheck();
     renderAssessment();
     setPromptReady(false);
-    document.getElementById('ai-prompt-preview').textContent = 'Заповніть Карту адаптації, щоб підготувати затверджений запит.';
+    document.getElementById('ai-status').textContent = '';
     showPage(0);
     announce('Навчальний прогрес очищено. Карта адаптації збережена.');
   }
@@ -942,31 +929,8 @@
     document.getElementById('download-portfolio').addEventListener('click', downloadPortfolioPdf);
     document.querySelectorAll('[data-approved-prompt]').forEach(button => {
       button.addEventListener('click', () => {
-        prepareAiPrompt(button.dataset.approvedPrompt, button);
+        copyAiPrompt(button.dataset.approvedPrompt);
       });
-    });
-
-    document.getElementById('copy-ai-prompt').addEventListener('click', () => {
-      copyText(
-        document.getElementById('ai-prompt-preview').textContent,
-        document.getElementById('ai-status'),
-        'Запит скопійовано. Ви самі вирішуєте, чи передавати його зовнішньому AI-інструменту.'
-      );
-    });
-    document.getElementById('copy-ai-prompt-dialog').addEventListener('click', () => {
-      copyText(
-        document.getElementById('ai-prompt-dialog-content').textContent,
-        document.getElementById('ai-status'),
-        'Запит скопійовано. Ви самі вирішуєте, чи передавати його зовнішньому AI-інструменту.'
-      );
-    });
-    document.getElementById('close-ai-prompt-dialog').addEventListener('click', () => {
-      const dialog = document.getElementById('ai-prompt-dialog');
-      if (typeof dialog.close === 'function') dialog.close();
-      else dialog.removeAttribute('open');
-    });
-    document.getElementById('ai-prompt-dialog').addEventListener('close', () => {
-      (lastPromptTrigger || document.getElementById('preview-ai-prompt')).focus();
     });
 
     ['open-chatgpt', 'open-gemini'].forEach(id => {
@@ -974,14 +938,8 @@
       link.addEventListener('click', event => {
         if (!promptReady) {
           event.preventDefault();
-          document.getElementById('ai-status').textContent = 'Спочатку перегляньте запит.';
-          return;
+          document.getElementById('ai-status').textContent = 'Спочатку скопіюйте промпт.';
         }
-        copyText(
-          document.getElementById('ai-prompt-preview').textContent,
-          document.getElementById('ai-status'),
-          'Запит скопійовано. Вставте його у відкритому сервісі лише за власним рішенням.'
-        );
       });
     });
 
@@ -997,8 +955,7 @@
     document.addEventListener('keydown', event => {
       const target = event.target;
       const typing = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target?.isContentEditable;
-      const dialogOpen = document.getElementById('ai-prompt-dialog').open;
-      if (typing || dialogOpen || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (typing || event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.key === 'ArrowLeft' && !prevButton.disabled) showPage(currentPage - 1);
       if (event.key === 'ArrowRight' && !nextButton.disabled) showPage(currentPage + 1);
     });
