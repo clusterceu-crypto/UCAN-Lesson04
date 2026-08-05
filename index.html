@@ -21,10 +21,12 @@
 <a class="skip-link" href="#lesson-main">Перейти до основного змісту</a>
 <header aria-label="Навігація заняття" class="site-header">
 <div aria-label="UCAN" class="brand">UCAN</div>
+<a aria-label="Попереднє заняття: Заняття 03" class="button button-quiet button-small header-lesson-link" href="https://clusterceu-crypto.github.io/UCAN-Lesson03" id="previous-lesson-link" rel="prev">← Попереднє заняття</a>
 <div class="header-center">
 <span class="lesson-label">Заняття 04</span>
 <span aria-live="polite" class="page-label" id="page-label"></span>
 </div>
+<button aria-label="Відкрити фінальну сторінку в режимі QA" class="button button-small qa-preview-control" hidden="" id="qa-preview-control" type="button">QA: Фінальна сторінка</button>
 <button aria-describedby="reset-progress-scope" class="button button-quiet button-small" id="reset-progress-top" type="button"><span aria-hidden="true">🔄</span> <span class="button-label">Почати спочатку</span></button><span class="visually-hidden" id="reset-progress-scope">Очищує навчальний прогрес, самоперевірку і тест, але зберігає Карту адаптації.</span>
 </header>
 <div aria-label="Прогрес відвіданих сторінок" class="progress-shell">
@@ -33,6 +35,20 @@
 </div>
 <span class="progress-text" id="progress-text"></span>
 </div>
+<nav aria-label="Етапи заняття" class="progress-navigation" id="progress-navigation">
+<div class="progress-steps">
+<button class="progress-step" data-progress-route="0" type="button">Початок</button>
+<button class="progress-step" data-progress-route="1" type="button">EU Cities Mission</button>
+<button class="progress-step" data-progress-route="2" type="button">Системний підхід</button>
+<button class="progress-step" data-progress-route="3" type="button">Як читати кейс</button>
+<button class="progress-step" data-progress-route="4" type="button">Міжнародний досвід</button>
+<button class="progress-step" data-progress-route="5" type="button">Ресурси</button>
+<button class="progress-step" data-progress-route="6" type="button">Самоперевірка</button>
+<button class="progress-step" data-progress-route="7" type="button">Практичне завдання + AI</button>
+<button class="progress-step" data-progress-route="8" type="button">Підсумковий тест</button>
+<button class="progress-step" data-progress-route="9" type="button">Завершення</button>
+</div>
+</nav>
 <div aria-live="polite" class="status-region" id="global-status" role="status"></div>
 <nav aria-label="Зміст заняття" class="section-navigation" id="section-navigation"></nav>
 <main class="lesson-main" id="lesson-main" tabindex="-1">
@@ -485,9 +501,9 @@
 <section class="ai-support" aria-label="AI-підтримка">
 <p>AI не створює Карту замість Вас. Він допомагає перевірити вже підготовлений матеріал.</p>
 <p>Натисніть «Копіювати промпт», відкрийте ChatGPT або Gemini та вставте промпт у чат.</p>
-<div class="button-row"><p>Перевірити межу між фактом та інтерпретацією.</p><button class="button button-secondary" data-approved-prompt="L04-AI-P01" type="button">Копіювати промпт</button></div>
-<div class="button-row"><p>Сформувати уточнювальні запитання щодо умов адаптації.</p><button class="button button-secondary" data-approved-prompt="L04-AI-P02" type="button">Копіювати промпт</button></div>
-<div class="button-row"><p>Підготувати контекст для Lesson 05.</p><button class="button button-primary" data-approved-prompt="L04-AI-P03" type="button">Копіювати промпт</button></div>
+<div class="ai-prompt-card"><p>Перевірити межу між фактом та інтерпретацією.</p><div class="ai-prompt-action"><button class="button button-secondary ai-copy-button" data-approved-prompt="L04-AI-P01" type="button"><span aria-hidden="true">📋</span> <span class="button-label">Копіювати промпт</span></button></div></div>
+<div class="ai-prompt-card"><p>Сформувати уточнювальні запитання щодо умов адаптації.</p><div class="ai-prompt-action"><button class="button button-secondary ai-copy-button" data-approved-prompt="L04-AI-P02" type="button"><span aria-hidden="true">📋</span> <span class="button-label">Копіювати промпт</span></button></div></div>
+<div class="ai-prompt-card"><p>Підготувати контекст для Lesson 05.</p><div class="ai-prompt-action"><button class="button button-secondary ai-copy-button" data-approved-prompt="L04-AI-P03" type="button"><span aria-hidden="true">📋</span> <span class="button-label">Копіювати промпт</span></button></div></div>
 <p aria-live="polite" class="form-status" id="ai-status" role="status"></p>
 <p class="privacy-note">Ваші дані залишаються у цьому браузері, доки Ви самі не скопіюєте їх або не вставите до зовнішнього сервісу. Не вводьте персональні чи конфіденційні дані. Перевіряйте відповіді AI: вони не замінюють відповідальне рішення та професійний розгляд команди громади.</p><div class="button-row ai-external-actions"><a aria-disabled="true" class="button button-external" href="https://chatgpt.com/" id="open-chatgpt" rel="noopener noreferrer" tabindex="-1" target="_blank"><span aria-hidden="true">🤖</span> <span class="button-label">Відкрити ChatGPT ↗</span></a><a aria-disabled="true" class="button button-external" href="https://gemini.google.com/app" id="open-gemini" rel="noopener noreferrer" tabindex="-1" target="_blank"><span aria-hidden="true">✨</span> <span class="button-label">Відкрити Gemini ↗</span></a></div>
 </section>
@@ -519,6 +535,7 @@
 </form>
 </section>
 <section aria-labelledby="p11-title" class="lesson-page completion-page" data-page-role="completion" hidden="">
+<aside aria-live="polite" class="callout callout-warning qa-preview-banner" hidden="" id="qa-preview-banner" role="status">QA Preview Mode — фінальна сторінка відкрита без перевірки завершення.</aside>
 <div class="eyebrow"><span aria-hidden="true">✅</span> Завершення</div>
 <h1 id="p11-title">Головна думка заняття</h1>
 <blockquote>Міжнародний досвід корисний не тоді, коли громада копіює чуже рішення, а тоді, коли розуміє його логіку, умови успіху та адаптує перший крок до власного контексту.</blockquote>
@@ -543,14 +560,7 @@
 <h2 id="next-title"><span aria-hidden="true">➡️</span> Перехід до наступного заняття</h2>
 <p>У наступному занятті Ви перейдете до природоорієнтованих рішень. Використайте свою Карту адаптації, щоб перевірити: чи може природа бути частиною відповіді на обраний локальний виклик — і які екосистемні, соціальні та управлінські умови для цього потрібні.</p>
 </section>
-<section aria-labelledby="completion-actions-title" class="completion-actions">
-<h2 id="completion-actions-title">Продовжити навчання</h2>
-<div class="button-row">
-<button class="button button-secondary" id="return-start" type="button"><span aria-hidden="true">↩️</span> <span class="button-label">Повернутися на початок</span></button>
-<a class="button button-secondary" hidden="" href="#" id="previous-lesson-link" rel="noopener"><span class="button-label">← До Заняття 03</span></a>
-<a class="button button-primary" hidden="" href="#" id="next-lesson-link" rel="noopener"><span class="button-label">Перейти до Заняття 05 →</span></a>
-</div>
-</section></section>
+</section>
 </main>
 <nav aria-label="Переходи між сторінками" class="lesson-nav">
 <button class="button button-secondary" id="prev-page" type="button"><span class="button-label">← Назад</span></button>

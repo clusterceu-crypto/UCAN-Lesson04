@@ -38,7 +38,11 @@
   const progressBar = document.getElementById('progress-bar');
   const progressFill = document.getElementById('progress-fill');
   const progressText = document.getElementById('progress-text');
+  const progressRouteButtons = Array.from(document.querySelectorAll('[data-progress-route]'));
+  const routeLabels = progressRouteButtons.map(button => button.textContent.trim());
   const globalStatus = document.getElementById('global-status');
+  const qaPreviewBanner = document.getElementById('qa-preview-banner');
+  const qaPreviewControl = document.getElementById('qa-preview-control');
 
   const selfCheckData = [
     { statement: 'Місто обирає рішення лише тому, що його використав відомий європейський лідер.', answer: 'Ні', feedback: 'Назва міста не замінює аналіз місцевих умов.' },
@@ -139,6 +143,8 @@
   let visited = new Set([0]);
   let assessmentPassed = false;
   let promptReady = false;
+  let qaPreviewMode = false;
+  let qaPreviewReturnPage = 0;
 
   function announce(message, isError = false) {
     globalStatus.textContent = message || '';
@@ -195,9 +201,35 @@
     });
   }
 
-  function showPage(index, { focus = true } = {}) {
+  function qaPreviewAllowed() {
+    return new URLSearchParams(window.location.search).get('qa') === '1';
+  }
+
+  function updateQaPreviewBanner() {
+    qaPreviewBanner.hidden = !qaPreviewMode || !isCompletionPage(currentPage);
+  }
+
+  function updateQaPreviewControl() {
+    qaPreviewControl.hidden = !qaPreviewAllowed();
+    qaPreviewControl.textContent = qaPreviewMode ? 'QA: Повернутися' : 'QA: Фінальна сторінка';
+  }
+
+  function toggleQaPreview() {
+    if (!qaPreviewAllowed()) return;
+    if (qaPreviewMode) {
+      qaPreviewMode = false;
+      showPage(qaPreviewReturnPage);
+    } else {
+      qaPreviewReturnPage = currentPage;
+      qaPreviewMode = true;
+      showPage(pages.length - 1, { preview: true });
+    }
+    updateQaPreviewControl();
+  }
+
+  function showPage(index, { focus = true, preview = false } = {}) {
     if (index < 0 || index >= pages.length) return;
-    const recoveryMessage = isCompletionPage(index) ? completionRecoveryMessage() : '';
+    const recoveryMessage = isCompletionPage(index) && !preview ? completionRecoveryMessage() : '';
     if (recoveryMessage) {
       index = pages.findIndex(page => page.dataset.pageRole === 'assessment');
       announce(recoveryMessage, true);
@@ -212,11 +244,14 @@
       page.setAttribute('aria-hidden', active ? 'false' : 'true');
     });
 
-    visited.add(index);
-    storageSet(keys.page, currentPage);
-    storageSet(keys.visited, Array.from(visited));
+    if (!preview) {
+      visited.add(index);
+      storageSet(keys.page, currentPage);
+      storageSet(keys.visited, Array.from(visited));
+    }
     updateNavigation();
     updateProgress();
+    updateQaPreviewBanner();
 
     if (focus) {
       const heading = pages[index].querySelector('h1');
@@ -229,28 +264,52 @@
     }
   }
 
-  function updateNavigation() {
+  function updateNavigation({ keepViewport = false } = {}) {
     const total = pages.length;
     const pageNumber = currentPage + 1;
-    pageLabel.textContent = `Сторінка ${pageNumber} з ${total}`;
+    pageLabel.textContent = routeLabels[currentPage];
     navPageCount.textContent = `${pageNumber} / ${total}`;
     prevButton.disabled = currentPage === 0;
     prevButton.setAttribute('aria-disabled', String(prevButton.disabled));
 
     const lastPage = currentPage === total - 1;
     const blockedByTest = CONFIG.assessmentGate && isAssessmentPage(currentPage) && !(assessmentPassed && isPortfolioComplete());
-    nextButton.disabled = lastPage || blockedByTest;
+    nextButton.disabled = blockedByTest;
     nextButton.setAttribute('aria-disabled', String(nextButton.disabled));
-    if (blockedByTest) {
+    const nextLabel = nextButton.querySelector('.button-label');
+    if (lastPage) {
+      nextLabel.textContent = 'Наступне заняття →';
+      nextButton.setAttribute('aria-label', 'Наступне заняття: Заняття 05');
+      nextButton.removeAttribute('title');
+    } else if (blockedByTest) {
+      nextLabel.textContent = 'Далі →';
       const gateMessage = assessmentPassed
         ? 'Наступний розділ — заповніть усі поля Карти адаптації'
         : 'Наступний розділ — спочатку завершіть тест';
       nextButton.setAttribute('aria-label', gateMessage);
       nextButton.title = gateMessage;
     } else {
+      nextLabel.textContent = 'Далі →';
       nextButton.setAttribute('aria-label', 'Наступний розділ');
       nextButton.removeAttribute('title');
     }
+    updateProgressNavigation({ keepViewport });
+  }
+
+  function updateProgressNavigation({ keepViewport = false } = {}) {
+    const completionUnlocked = assessmentPassed && isPortfolioComplete();
+    progressRouteButtons.forEach(button => {
+      const routeIndex = Number(button.dataset.progressRoute);
+      const active = routeIndex === currentPage;
+      const locked = isCompletionPage(routeIndex) && !completionUnlocked;
+      button.disabled = locked;
+      button.setAttribute('aria-disabled', String(locked));
+      button.setAttribute('aria-current', active ? 'step' : 'false');
+      button.classList.toggle('is-active', active);
+      if (active && !keepViewport) {
+        button.scrollIntoView({ block: 'nearest', inline: 'center', behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
+    });
   }
 
   function updateProgress() {
@@ -398,7 +457,7 @@
     const answers = collectRadioAnswers('assessment', assessmentData.length);
     storageSet(keys.assessment, { answers, checked: false, passed: false });
     assessmentPassed = false;
-    updateNavigation();
+    updateNavigation({ keepViewport: true });
   }
 
   function handleAssessmentSubmit(event) {
@@ -426,8 +485,7 @@
       : assessmentPassed
       ? 'Усі шість відповідей правильні. Заповніть усі поля Карти адаптації, щоб відкрити сторінку завершення.'
       : `Правильних відповідей: ${correctCount} з ${assessmentData.length}. Перегляньте зворотний зв’язок і спробуйте ще раз.`;
-    updateNavigation();
-    status.focus?.();
+    updateNavigation({ keepViewport: true });
   }
 
   function resetAssessment() {
@@ -867,6 +925,9 @@
     if (!confirmed) return;
     [keys.page, keys.visited, keys.transition, keys.selfCheck, keys.assessment].forEach(storageRemove);
     assessmentPassed = false;
+    qaPreviewMode = false;
+    updateQaPreviewBanner();
+    updateQaPreviewControl();
     visited = new Set([0]);
     const transitionField = document.getElementById('transition-note');
     if (transitionField) transitionField.value = '';
@@ -878,28 +939,6 @@
     announce('Навчальний прогрес очищено. Карта адаптації збережена.');
   }
 
-
-  function configureCompletionActions() {
-    document.getElementById('return-start').addEventListener('click', () => showPage(0));
-
-    const previousLink = document.getElementById('previous-lesson-link');
-    if (CONFIG.previousLessonUrl) {
-      previousLink.href = CONFIG.previousLessonUrl;
-      previousLink.hidden = false;
-    } else {
-      previousLink.hidden = true;
-      previousLink.removeAttribute('href');
-    }
-
-    const nextLink = document.getElementById('next-lesson-link');
-    if (CONFIG.nextLessonUrl) {
-      nextLink.href = CONFIG.nextLessonUrl;
-      nextLink.hidden = false;
-    } else {
-      nextLink.hidden = true;
-      nextLink.removeAttribute('href');
-    }
-  }
 
   function ensureStorageMetadata() {
     const existing = storageGet(keys.meta, null);
@@ -918,7 +957,13 @@
 
   function bindEvents() {
     prevButton.addEventListener('click', () => showPage(currentPage - 1));
-    nextButton.addEventListener('click', () => showPage(currentPage + 1));
+    nextButton.addEventListener('click', () => {
+      if (currentPage === pages.length - 1) {
+        window.location.assign(CONFIG.nextLessonUrl);
+        return;
+      }
+      showPage(currentPage + 1);
+    });
 
     document.getElementById('self-check-form').addEventListener('submit', handleSelfCheckSubmit);
     document.getElementById('self-check-reset').addEventListener('click', resetSelfCheck);
@@ -927,6 +972,9 @@
     document.getElementById('portfolio-form').addEventListener('submit', handlePortfolioSubmit);
     document.getElementById('clear-portfolio').addEventListener('click', clearPortfolio);
     document.getElementById('download-portfolio').addEventListener('click', downloadPortfolioPdf);
+    progressRouteButtons.forEach(button => {
+      button.addEventListener('click', () => showPage(Number(button.dataset.progressRoute)));
+    });
     document.querySelectorAll('[data-approved-prompt]').forEach(button => {
       button.addEventListener('click', () => {
         copyAiPrompt(button.dataset.approvedPrompt);
@@ -949,8 +997,8 @@
       copyText(text, document.getElementById('context-status'), 'Контекст для наступного заняття скопійовано.');
     });
     document.getElementById('reset-progress-top').addEventListener('click', resetLearningProgress);
+    qaPreviewControl.addEventListener('click', toggleQaPreview);
     configureExternalActions();
-    configureCompletionActions();
 
     document.addEventListener('keydown', event => {
       const target = event.target;
@@ -974,6 +1022,7 @@
     restorePortfolio();
     restoreTransitionNote();
     bindEvents();
+    updateQaPreviewControl();
 
     let savedPage = storageGet(keys.page, 0);
     if (!Number.isInteger(savedPage) || savedPage < 0 || savedPage >= pages.length) savedPage = 0;

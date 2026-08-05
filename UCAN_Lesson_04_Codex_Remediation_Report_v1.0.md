@@ -124,3 +124,111 @@ Status: 🟡 Lesson 04 Targeted Production Hotfix Implemented
 Defects: 🟢 L04-FPQA-001 Closed · 🟢 L04-FPQA-002 Implemented (targeted browser verification pending)
 Verification: 🟡 Targeted Browser Verification Blocked — `net::ERR_BLOCKED_BY_CLIENT` on local test endpoints
 Control: 🟡 Controlled Save Not Yet Authorized
+
+## Controlled UX Alignment Sprint — Progress, Course Navigation, AI Copy Buttons (2026-08-04)
+
+- Baseline: `develop` at `373a99fb713976a1b018e576d9509b794f1c2086` (`фінал 1.1`); working tree was clean and remote was `https://github.com/clusterceu-crypto/UCAN-Lesson04.git`.
+- Files changed: `index.html`, `css/lesson04.css`, `js/lesson04.js`, `tests/static/lesson04-static-checks.ps1`, and this report. `css/ucan-components.css` was not changed. Read-only `js/lesson04-config.js`, approved assets, the Final Production QA report, and the executable contract remain unchanged.
+- Section-aware progress implementation: one 10-label progress strip now follows `currentPage`; each active label is marked `aria-current="step"`, styled active, and scrolled into view within its own controlled horizontal container. The existing `Сторінка X з 10`, percentage, bar width, and `aria-valuenow` remain derived from the same position-based state. Routes 1–9 remain available and Route 10 is disabled in the strip until `assessmentPassed && isPortfolioComplete()`.
+- Course navigation implementation: Route 10 now has a separate lower `course-navigation` block, distinct from internal Back/Next and `Повернутися на початок`. Exact labels are `← Попереднє заняття: Заняття 03` and `Наступне заняття: Заняття 05 →`; the flex layout places previous left and next right on desktop and stacks safely on mobile.
+- URL sources: Lesson 03 uses the existing `CONFIG.previousLessonUrl` value `https://clusterceu-crypto.github.io/UCAN-Lesson03`. Lesson 05 uses the existing `CONFIG.nextLessonUrl` value `https://clusterceu-crypto.github.io/UCAN-Lesson05`; no URL was inferred or invented.
+- AI copy-button alignment: P01–P03 retain direct copy only, use purpose/action separation, one shared compact `ai-copy-button` pattern, a copy icon, exact `Копіювати промпт` label, consistent sizing/radius/padding/focus/active treatment, and a mobile-safe stacked layout. Payload generation remains exclusively `window.UCAN_L04_APPROVED_PROMPTS`; no preview, modal, payload text, or pre-copy flow was reintroduced.
+- Static verification: `git diff --check` and the existing static suite passed. The suite confirms exactly 10 ordered progress labels, current-route-driven active state and Route 10 lock, exact course-navigation labels and canonical URLs, three icon-bearing copy buttons, unchanged registry hashes, no preview workflow, 13 Portfolio fields, assessment key, combined completion gate, 10 runtime routes, and position-based progress. Shell `node --check` is unavailable; changed JavaScript parsed with the available Node runtime without syntax errors.
+- Targeted browser verification: blocked before the app could load. Local HTTP origin `http://127.0.0.1:4174/` was rejected by the in-app browser with `net::ERR_BLOCKED_BY_CLIENT`. Consequently desktop (1440×900), tablet (768×1024), mobile (390×844), Route 10 link target/alignment, P01–P03 clipboard/action, console, and regression smoke scenarios could not be observed.
+- Regression smoke: static regression locks pass; browser smoke is blocked by the same local-origin error. No full Final Production Preview was run.
+- Validated Candidate Pattern for Lessons 05–26 (not an Approved Standard): (1) Section-Aware Progress Pattern — one route-derived progress state with active/locked labels inside a contained responsive strip; (2) Course Navigation Pattern — separate explicit previous/next lesson controls using confirmed canonical URLs; (3) AI Prompt Copy Pattern — purpose-separated, equal direct-copy controls sourced only from the approved registry.
+- Git operations: none. Repository synchronization: not performed.
+
+Status: 🟡 Lesson 04 UX Alignment Implemented
+Verification: 🟡 Browser Verification Blocked — `net::ERR_BLOCKED_BY_CLIENT` on local HTTP origin
+Control: 🟡 Controlled Save Not Yet Authorized
+Synchronization: 🔴 Do Not Synchronize Repository
+
+## L04-UX-COURSE-NAV-001 — Targeted Course Navigation Correction (2026-08-04)
+
+- Defect ID: `L04-UX-COURSE-NAV-001`.
+- Root cause: both Route 10 course-navigation anchors were shipped with `hidden` and `href="#"`. Their visibility depended on JavaScript initialization, and the same JavaScript contained branches that could hide them again.
+- Exact source change: `index.html` now renders both anchors visible by default with their confirmed canonical URLs. `js/lesson04.js` no longer modifies the visibility or href of either course-navigation link; it retains only the existing `Повернутися на початок` action.
+- Exact URLs and evidence source: `https://clusterceu-crypto.github.io/UCAN-Lesson03` and `https://clusterceu-crypto.github.io/UCAN-Lesson05`, both from the existing approved `CONFIG.previousLessonUrl` / `CONFIG.nextLessonUrl` values in `js/lesson04.js`. No URL was guessed.
+- Files changed for this correction: `index.html`, `js/lesson04.js`, `tests/static/lesson04-static-checks.ps1`, and this report.
+- Static verification: `git diff --check` passed; `STATIC_CHECKS_PASS` confirms visible non-placeholder previous/next anchors, exact labels, exact canonical URLs, no `previousLink`/`nextLink` JavaScript visibility toggle, 10 runtime routes, unchanged approved prompt registry, and preserved regression locks. Shell `node --check` is unavailable; changed JavaScript parsed without syntax errors in the available Node runtime.
+- Targeted browser verification: blocked before app content loaded. The in-app browser rejected local origin `http://127.0.0.1:4174/` with `net::ERR_BLOCKED_BY_CLIENT`, so Route 10 desktop/mobile visual verification and console inspection could not run.
+- Git operations: none. Repository synchronization: none.
+
+Status: 🟢 Lesson 04 Course Navigation Corrected
+Defect: 🟢 L04-UX-COURSE-NAV-001 Closed
+Visibility: 🟢 Previous Lesson Button Visible · 🟢 Next Lesson 05 Button Visible
+Browser: 🟡 Verification blocked by `net::ERR_BLOCKED_BY_CLIENT`
+Control: 🟡 Controlled Save Required
+Synchronization: 🔴 Репозиторій не синхронізувати
+
+## L04-QA-PREVIEW-006 — Explicit QA Preview Control (2026-08-05)
+
+- Defect: `Shift + Alt + N` conflicts with OS/browser split-screen handling and cannot be a reliable QA control.
+- Correction: removed all QA keyboard detection and added exactly one header control, visible only when the URL parameter is `?qa=1`: `QA: Фінальна сторінка` (accessible name: `Відкрити фінальну сторінку в режимі QA`).
+- First click opens Route 10 in the existing in-memory QA preview and changes the label to `QA: Повернутися`; second click returns to the saved legitimate route and restores the label. Query parameter alone does not open Route 10.
+- State protection: QA mode remains in-memory and does not write localStorage or mutate assessment, Portfolio, completion state, learner progress, or the combined gate. The existing banner and QA control are excluded from print/PDF.
+- Standard amendment: **Canonical UCAN Creator QA Preview Pattern — Lessons 04–26** — QA is enabled only through `?qa=1`; expose explicit control; never use global shortcut; final route opens temporarily and toggles back; do not mutate learner/persistent state; exclude QA UI from print; QA UI absent on normal URLs; reuse unchanged across Lessons 04–26. Status: **Approved Production QA Control for Lessons 04–26**.
+- Files changed: `index.html`, `css/lesson04.css`, `js/lesson04.js`, `tests/static/lesson04-static-checks.ps1`, and this report.
+- Static verification: `git diff --check` and `STATIC_CHECKS_PASS` passed. Browser verification remains blocked by the local browser webview environment.
+- Git operations: none. Synchronization: none.
+
+## Final-Page Reset Duplication Removal (2026-08-05)
+
+- Removed the Route 10 `.completion-actions` block, including `Продовжити навчання` and `Повернутися на початок` / `#return-start`.
+- The persistent header `Почати спочатку` remains the single course-reset control; its existing reset contract, including Portfolio preservation, is unchanged.
+- Canonical Cross-Lesson Navigation additions: (11) final page MUST NOT duplicate the persistent header reset control; (12) `Повернутися на початок` is removed from final-page content; (13) course reset remains available only through header `Почати спочатку`.
+
+## L04-UX-FINAL-NAV-008 and L04-UX-HEADER-CONTEXT-009 (2026-08-05)
+
+- Route 10 now uses the existing right sticky control as the sole Lesson 05 control: its visible label becomes `Наступне заняття →`, it is active, has accessible name `Наступне заняття: Заняття 05`, and navigates same-tab to the configured Lesson 05 URL. The content CTA was removed.
+- Routes 1–9 retain sticky `Далі →`. Header page counter was replaced with the current section label derived from the existing approved progress-label source; sticky count remains unchanged.
+- Static verification: `git diff --check` and `STATIC_CHECKS_PASS` passed. Browser verification remains blocked by the local webview environment. Learner gate, QA preview, assessment viewport fix, Portfolio, and prompt contracts are unchanged.
+- Canonical UCAN Final Navigation Pattern and Header Context Pattern are recorded as Approved Production UX Rules for Lessons 04–26: final sticky next replaces internal next; no duplicate content CTA; header shows lesson number + approved section label, while count remains in progress/sticky navigation.
+
+## Controlled Creator QA Preview Shortcut (2026-08-05)
+
+- Added in-memory `Shift + Alt + N` QA Preview Mode. It is permitted only on `localhost`, `127.0.0.1`, or with `?qa=1`.
+- The shortcut opens Route 10 for inspection without writing learner progress, answers, Portfolio data, completion flags, or `assessmentPassed`; the real gate remains `assessmentPassed && isPortfolioComplete()`.
+- A Route 10-only accessible banner states: `QA Preview Mode — фінальна сторінка відкрита без перевірки завершення.` It is excluded from print/PDF output.
+- Repeating the shortcut returns to the last real learner route; reset also exits preview mode.
+- Files changed: `index.html`, `css/lesson04.css`, `js/lesson04.js`, `tests/static/lesson04-static-checks.ps1`, and this report.
+- Static verification: `git diff --check` and `STATIC_CHECKS_PASS` passed, including QA access/persistence checks and existing regression locks. Node CLI is unavailable; changed JS requires runtime browser verification.
+- Git operations: none. Repository synchronization: none.
+
+## L04-UX-ASSESSMENT-004 — Targeted Assessment Interaction Hotfix (2026-08-04)
+
+- Defect ID: `L04-UX-ASSESSMENT-004`.
+- Root cause: an assessment radio change called `saveAssessmentDraft()`, which called `updateNavigation()`. The section-aware progress update then called `scrollIntoView()` on the active top progress control, scrolling the learner from the selected Route 9 answer to the top of the page.
+- Exact code change: `updateNavigation()` and `updateProgressNavigation()` now accept `keepViewport`. Assessment draft saves and assessment submit call `updateNavigation({ keepViewport: true })`; this updates only stored answer/gate state without `scrollIntoView()`. The unnecessary assessment-status focus call was removed. No route render, `showPage`, question rebuild, scoring, or completion transition is triggered by selection or submit.
+- Files changed: `js/lesson04.js`, `tests/static/lesson04-static-checks.ps1`, and this report.
+- Before/after: before, a selected option persisted and then the progress control scrolled the viewport to Route 9 top; after, the selected radio retains focus and state while the viewport remains at the current question.
+- Static verification: `git diff --check` and `STATIC_CHECKS_PASS` passed. Added assertions verify that assessment option changes and submit paths do not call route render, `scrollTo`, `scrollIntoView`, or focus, and preserve the current route/viewport. Existing checks confirm the six-question answer key, pass threshold, 10 routes, combined completion gate, and approved prompt registry remain unchanged. Shell `node --check` is unavailable; changed JavaScript parsed without syntax errors in the available Node runtime.
+- Browser verification: blocked by the current in-app browser environment before local page interaction; prior local run failed with `Timed out waiting for the Browser webview to attach for this browser-use page`. First/middle/last question and submit scenarios therefore require a later local browser QA run.
+- Git operations: none. Repository synchronization: none.
+
+Status: 🟡 Lesson 04 Assessment Interaction Hotfix Implemented
+Verification: 🟡 Browser Verification Blocked
+Control: 🟡 Controlled Save Not Yet Authorized
+Synchronization: 🔴 Репозиторій не синхронізувати
+
+## L04-UX-NAV-PATTERN-003 — Canonical Cross-Lesson Navigation Pattern (2026-08-04)
+
+- Defect ID: `L04-UX-NAV-PATTERN-003`.
+- Root cause: cross-lesson navigation in Lesson 04 was repeatedly reinterpreted instead of reusing the established Lesson 03 production pattern.
+- Lesson 03 reference reviewed: `clusterceu-crypto/UCAN-Lesson03`, branch `develop`, `index.html`. Its persistent header places `← Попереднє заняття` immediately after the UCAN brand in the learner-facing header order. Its final transition targets the next lesson only at the end of the lesson flow.
+- Exact Lesson 04 implementation: the single Lesson 03 anchor now sits directly after the UCAN brand in `.site-header`, with the visible label `← Попереднє заняття`, `rel="prev"`, and URL `https://clusterceu-crypto.github.io/UCAN-Lesson03`. It has no `hidden` attribute and no JavaScript visibility toggle. The single Lesson 05 anchor is now inside Route 10 only, has visible label `Наступне заняття →`, `rel="next"`, and URL `https://clusterceu-crypto.github.io/UCAN-Lesson05`. No Lesson 05 control appears in the header.
+- Duplicates removed: the incorrect Route 10 previous/next pair and long visible labels were replaced by one persistent previous control and one final-page next control. Internal `← Назад` / `Далі →` remain unchanged and separate.
+- Responsive behavior: desktop header order is UCAN, previous lesson, lesson/page information, reset. Mobile preserves the previous link in a dedicated second header row and reset in a third row; the final Lesson 05 control fills its own responsive final-page block. This follows the Lesson 03 interaction hierarchy without copying lesson-specific code.
+- Approved Production Navigation Rule for Lessons 04–26: (1) Header contains one persistent `← Попереднє заняття` button immediately after the UCAN logo. (2) The previous-lesson button is visible on every lesson page. (3) The final lesson page contains one `Наступне заняття →` button. (4) The next-lesson button is not placed in the header. (5) Internal `← Назад` / `Далі →` navigation remains separate. (6) Position, style, responsive behavior, and interaction are reused unchanged. (7) Only lesson number and canonical URL change. (8) No lesson team may redesign this pattern without an approved architecture decision. (9) Lesson 01 may omit or disable the previous-lesson control. (10) The final course lesson may omit the next-lesson control or use an approved completion destination.
+- Standard document update record — `Cross-Lesson Navigation`: **MUST** provide a persistent previous-lesson button immediately after UCAN logo; **MUST** show it on all pages; **MUST** provide the next-lesson button on the final page only; **MUST** reuse Lesson 03 position and visual pattern; **MUST** change only lesson number and canonical URL; **MUST NOT** place next-lesson button in the header; **MUST NOT** redesign per lesson; **MUST NOT** mix cross-lesson navigation with internal page navigation. This amendment text is prepared for the master standard; no normative DOCX was edited in this sprint.
+- Files changed for this correction: `index.html`, `css/lesson04.css`, `tests/static/lesson04-static-checks.ps1`, and this report. `js/lesson04.js` remains unchanged for this pattern, including all completion, assessment, and storage contracts.
+- Static verification: `git diff --check` and `STATIC_CHECKS_PASS` pass. Assertions confirm one canonical link for Lesson 03 and Lesson 05, previous link after brand, no hidden/placeholder/toggle, next link completion-only, no Lesson 05 header link, 10 runtime routes, unchanged progress/prompt registry/Portfolio/assessment contracts.
+- Browser verification: blocked before local page attachment at `http://127.0.0.1:4174/`: `Timed out waiting for the Browser webview to attach for this browser-use page`. Route-by-route desktop/mobile/console observations could not run.
+- Git operations: none. Repository synchronization: none.
+
+Status: 🟡 Lesson 04 Cross-Lesson Navigation Implemented
+Verification: 🟡 Browser Verification Blocked
+Rule: 🟢 Canonical Navigation Rule for Lessons 04–26 Recorded
+Control: 🟡 Controlled Save Not Yet Authorized
+Synchronization: 🔴 Репозиторій не синхронізувати

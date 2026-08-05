@@ -1,2 +1,24 @@
 /* Lesson 04 ownership layer. Reading measure remains bounded within the 1240px shell. */
 .lesson-page > p, .lesson-page > ul, .lesson-page > ol, .lesson-page > dl { max-width:var(--ucan-reading); }
+
+.progress-navigation { background:var(--white); border-bottom:1px solid var(--grey-200); overflow-x:auto; overscroll-behavior-inline:contain; }
+.progress-steps { display:grid; grid-template-columns:repeat(10,minmax(6.75rem,1fr)); gap:.35rem; width:100%; min-width:70rem; max-width:var(--ucan-shell); margin:0 auto; padding:.5rem max(1rem,calc((100vw - var(--ucan-shell))/2)); }
+.progress-step { min-height:2.75rem; border:1px solid var(--grey-300); border-radius:8px; background:var(--white); color:var(--blue-900); cursor:pointer; font:inherit; font-size:.78rem; font-weight:700; line-height:1.2; padding:.45rem .55rem; text-align:center; }
+.progress-step:hover:not(:disabled), .progress-step:focus-visible { border-color:var(--blue-700); background:var(--blue-50); outline:none; }
+.progress-step:focus-visible { box-shadow:0 0 0 3px rgba(18,63,104,.28); }
+.progress-step.is-active { background:var(--blue-900); border-color:var(--blue-900); color:var(--white); }
+.progress-step:disabled { color:var(--grey-500); cursor:not-allowed; opacity:.72; }
+.ai-prompt-card { align-items:center; border-top:1px solid var(--grey-200); display:flex; gap:1rem; justify-content:space-between; padding:.8rem 0; }
+.ai-prompt-card p { margin:0; }
+.ai-prompt-action { flex:0 0 auto; }
+.ai-copy-button { align-items:center; border-radius:8px; display:inline-flex; gap:.35rem; justify-content:center; min-height:2.75rem; padding:.55rem .85rem; white-space:nowrap; }
+.ai-copy-button:active { transform:translateY(1px); }
+.site-header { grid-template-columns:auto auto minmax(0,1fr) auto; }
+.header-lesson-link { white-space:nowrap; }
+.qa-preview-control { border:1px dashed var(--yellow-700, #8a6500); color:var(--yellow-900, #5a4200); background:var(--yellow-50, #fff8d8); white-space:nowrap; }
+.final-lesson-navigation { border-top:1px solid var(--grey-200); display:flex; justify-content:flex-end; margin-top:1.5rem; padding-top:1.25rem; }
+.final-lesson-navigation .button { align-items:center; display:inline-flex; min-height:2.75rem; }
+@media (max-width:800px) { .progress-steps { margin:0; padding-inline:.75rem; } }
+@media (max-width:680px) { .site-header { grid-template-columns:auto 1fr; } .site-header .header-lesson-link { grid-column:1 / -1; grid-row:2; justify-self:start; } .site-header #reset-progress-top { grid-column:1 / -1; grid-row:3; } .progress-steps { grid-template-columns:repeat(10,7.5rem); min-width:75rem; } .ai-prompt-card { align-items:flex-start; flex-direction:column; } .final-lesson-navigation { justify-content:stretch; } .final-lesson-navigation .button { justify-content:center; width:100%; } }
+@media (prefers-reduced-motion:reduce) { .progress-navigation { scroll-behavior:auto; } .ai-copy-button:active { transform:none; } }
+@media print { .qa-preview-banner, .qa-preview-control { display:none !important; } }
